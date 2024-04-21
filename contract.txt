@@ -1,0 +1,34 @@
+40dc92efebb7
+
+hash: dcaa78d1990724f7837472dd1ff91affe3788be2e1a21691ab50851a81a88f2f
+
+version: - 8
+
+id: 7pYokMpgxfkYbjZFcy4qMc3gyNfSYLc9hX121t2ZXKfQ
+
+tokenID: 3uEkGk7KJcWgg2PMAEbxMgwGv6QwkXGjrfGiJ7vXoSCd
+
+{
+  "type": 103,
+  "version": 2,
+  "sender": "3NuGr9uc7UkJ6MiEx5UJsRcFVhRts3DHtm3",
+  "password": "Mj-E4gYbLR1L2-4ha4LGBQ",
+  "image": "localhost:5000/shop",
+  "contractName": "shop",
+  "imageHash": "d04985f9e29f4e4a9e3afaeeb2e1d4b9227c1a7d9dcc4b125edeac4c9e7b3219",
+  "params": [],
+  "fee": 0,
+  "feeAssetId": null
+}
+
+//update
+{
+  "image" : "localhost:5000/shop",
+  "sender" : "3NuGr9uc7UkJ6MiEx5UJsRcFVhRts3DHtm3",
+  "password": "Mj-E4gYbLR1L2-4ha4LGBQ",
+  "fee" : 0,
+  "contractId" : "7pYokMpgxfkYbjZFcy4qMc3gyNfSYLc9hX121t2ZXKfQ",
+  "imageHash" : "dcaa78d1990724f7837472dd1ff91affe3788be2e1a21691ab50851a81a88f2f",
+  "type" : 107,
+  "version" : 2
+}

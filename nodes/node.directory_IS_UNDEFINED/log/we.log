@@ -1,0 +1,12 @@
+2024-04-19 17:27:06,694 INFO  [main] c.w.g.AccountsGeneratorApp$ - Generator started...
+2024-04-19 17:27:07,107 INFO  [main] o.reflections.Reflections - Reflections took 261 ms to scan 1 urls, producing 47 keys and 817 values
+2024-04-19 17:27:07,304 INFO  [main] c.w.g.AccountsGeneratorApp$ - The final configuration: 
+crypto:           Waves(DisabledPkiSettings)
+chainId:          T
+amount:           1
+wallet:           ./wallet.dat
+walletPassword:   777
+reloadNodeWallet: disabled
+       
+2024-04-19 17:27:11,906 INFO  [main] c.w.g.AccountsGeneratorApp$ - 1 Address: 3N7EkhDFgBjvseXACfLkRSD5h5tjb8hTB4o; public key: 3fUaiTBorsDQWRPRBtRJFNVjdkuTyYTw6yQ3jQRCnN5Z
+2024-04-19 17:27:11,908 INFO  [main] c.w.g.AccountsGeneratorApp$ - Generator done

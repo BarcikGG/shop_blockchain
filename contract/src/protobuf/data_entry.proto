@@ -1,0 +1,25 @@
+syntax = "proto3";
+package wavesenterprise;
+
+option java_multiple_files = true;
+option java_package = "com.wavesenterprise.transaction.protobuf";
+option csharp_namespace = "WavesEnterprise";
+option go_package = "wavesenterprise.com/weproto";
+
+message DataEntry {
+    string key = 1;
+    oneof value {
+        int64 int_value = 10 [jstype = JS_STRING];
+        bool bool_value = 11;
+        bytes binary_value = 12;
+        string string_value = 13;
+    }
+}
+
+message DataEntryList {
+    repeated DataEntry entries = 1;
+}
+
+message DataEntryMap {
+    map<string, DataEntryList> dataEntryList = 1;
+}
