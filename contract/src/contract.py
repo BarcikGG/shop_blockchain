@@ -175,7 +175,7 @@ class ContractHandler:
         name = find_string(self.__call_transaction.params, "name")
         description = find_string(self.__call_transaction.params, "description")
         region = find_string(self.__call_transaction.params, "region")
-        pbk = find_string(self.__call_transaction.params, "public_key")
+        pbk = self.__call_transaction.senderPublicKey;
         phone = find_string(self.__call_transaction.params, "phone")
         fio = find_string(self.__call_transaction.params, "fio")
         
@@ -210,7 +210,7 @@ class ContractHandler:
 
     def __register_operator(self):
         self.operators = self.__read_key("operators")
-        pbk = find_string(self.__call_transaction.params, "public_key")
+        pbk = self.__call_transaction.senderPublicKey;
         phone = find_string(self.__call_transaction.params, "phone")
         fio = find_string(self.__call_transaction.params, "fio")
         
@@ -253,7 +253,8 @@ class ContractHandler:
         title = find_string(self.__call_transaction.params, "title")
         description = find_string(self.__call_transaction.params, "description")
         regions = find_string(self.__call_transaction.params, "regions")
-        pk = find_string(self.__call_transaction.params, "public_key")
+        pk = self.__call_transaction.senderPublicKey;
+        # pk = find_string(self.__call_transaction.params, "public_key")
         price = find_int(self.__call_transaction.params, "price")
 
         if title is None:
@@ -281,7 +282,6 @@ class ContractHandler:
         self.__write_data([data_entry_pb2.DataEntry(key="productWait", string_value=json.dumps(self.productWait))])
 
     def __withdraw(self):
-        #owner of prod
         try:
             transfer = contract_transfer_out_pb2.ContractTransferOut()
             
