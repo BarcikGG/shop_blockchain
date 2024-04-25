@@ -89,15 +89,25 @@ class ContractHandler:
         self.__metadata = [(AUTH_METADATA_KEY, contract_transaction_response.auth_token)]
         try:
             action = find_string(self.__call_transaction.params, "action")
-            if action == "register": self.__register()
-            elif action == "register_operator": self.__register_operator()
-            elif action == "accept_reg": self.__confirm_registration()
-            elif action == "create_product": self.__create_product()
-            elif action == "accept_product": self.__accept_product()
-            elif action == "delete": self.__delete()
-            elif action == "buy": self.__buy_product()
-            elif action == "withdraw": self.__withdraw()
-            else: self.__set_error("Can't find action")
+            match action:
+                case "register":
+                    self.__register()
+                case "register_operator":
+                    self.__register_operator()
+                case "accept_reg":
+                    self.__confirm_registration()
+                case "create_product":
+                    self.__create_product()
+                case "accept_product":
+                    self.__accept_product()
+                case "delete":
+                    self.__delete()
+                case "buy":
+                    self.__buy_product()
+                case "withdraw":
+                    self.__withdraw()
+                case _:
+                    self.__set_error("Can't find action")
         except BaseException as error:
             self.__set_error(error)
 
@@ -114,32 +124,34 @@ class ContractHandler:
             self.__set_error("You are not operator!")
         if account_key is None: self.__set_error("Key is required")
 
-        if type == "dist":
-            self.dists.pop(account_key)
-        elif type == "seller":
-            self.sellers.pop(account_key)
-        elif type == "client":
-            self.clients.pop(account_key)
-        elif type == "waitList":
-            self.waitList.pop(account_key)
-        elif type == "productWait":
-            self.productWait.pop(account_key)
-        elif type == "products":
-            self.products.pop(account_key)
-        elif type == "organizations":
-            self.organizations.pop(account_key)
-        else:
-            self.__set_error("Wrong type")
+        match type:
+            case "dist":
+                self.dists.pop(account_key)
+            case "seller":
+                self.sellers.pop(account_key)
+            case "client":
+                self.clients.pop(account_key)
+            case "waitList":
+                self.waitList.pop(account_key)
+            case "productWait":
+                self.productWait.pop(account_key)
+            case "products":
+                self.products.pop(account_key)
+            case "organizations":
+                self.organizations.pop(account_key)
+            case _:
+                self.__set_error("Wrong type")
         
-        self.__write_data([
-            data_entry_pb2.DataEntry(key="dists", string_value=json.dumps(self.dists)),
-            data_entry_pb2.DataEntry(key="sellers", string_value=json.dumps(self.sellers)),
-            data_entry_pb2.DataEntry(key="clients", string_value=json.dumps(self.clients)),
-            data_entry_pb2.DataEntry(key="waitList", string_value=json.dumps(self.waitList)),
-            data_entry_pb2.DataEntry(key="productWait", string_value=json.dumps(self.productWait)),
-            data_entry_pb2.DataEntry(key="products", string_value=json.dumps(self.products)),
-            data_entry_pb2.DataEntry(key="organizations", string_value=json.dumps(self.organizations))
-        ])
+        self.__write_data(self.__write_data_entries({
+                "dists": self.dists,
+                "sellers": self.sellers,
+                "clients": self.clients,
+                "waitList": self.waitList,
+                "productWait": self.productWait,
+                "products": self.products,
+                "organizations": self.organizations
+            })
+        )
 
     def __confirm_registration(self):
         self.waitList = self.__read_key("waitList")
@@ -151,21 +163,23 @@ class ContractHandler:
             self.__set_error("You are not operator!")
         if account_key is None: self.__set_error("Accepted account is required")
 
-        if account_type == "dist":
-            self.dists[account_key] = self.waitList.pop(account_key)
-        elif account_type == "seller":
-            self.sellers[account_key] = self.waitList.pop(account_key)
-        elif account_type == "client":
-            self.clients[account_key] = self.waitList.pop(account_key)
-        else:
-            self.__set_error("Wrong type. Choose: dist, seller, client")
+        match account_type:
+            case "dist":
+                self.dists[account_key] = self.waitList.pop(account_key)
+            case "seller":
+                self.sellers[account_key] = self.waitList.pop(account_key)
+            case "client":
+                self.clients[account_key] = self.waitList.pop(account_key)
+            case _:
+                self.__set_error("Wrong type. Choose: dist, seller, client")
         
-        self.__write_data([
-            data_entry_pb2.DataEntry(key="dists", string_value=json.dumps(self.dists)),
-            data_entry_pb2.DataEntry(key="sellers", string_value=json.dumps(self.sellers)),
-            data_entry_pb2.DataEntry(key="clients", string_value=json.dumps(self.clients)),
-            data_entry_pb2.DataEntry(key="waitList", string_value=json.dumps(self.waitList))
-        ])
+        self.__write_data(self.__write_data_entries({
+                "dists": self.dists,
+                "sellers": self.sellers,
+                "clients": self.clients,
+                "waitList": self.waitList
+            })
+        )
     
     def __register(self):
         self.waitList = self.__read_key("waitList")
@@ -202,6 +216,7 @@ class ContractHandler:
             user = Seller({"balance":100, "seller_name": name, "description": description, "region": 
                          region, "phone": phone, "fio": fio, "public_key": pbk})
             self.__push_waitList(user, self.__call_transaction.sender)
+            self.__reg_organization(organization_name=name, pbk=pbk)
 
         self.__write_data([
             data_entry_pb2.DataEntry(key="waitList",string_value=json.dumps(self.waitList)),
