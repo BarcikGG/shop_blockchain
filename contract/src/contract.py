@@ -142,7 +142,7 @@ class ContractHandler:
             case _:
                 self.__set_error("Wrong type")
         
-        self.__write_data(self.__write_data_entries({
+        self.__write_data(self.__write_data_entries({ # TODO
                 "dists": self.dists,
                 "sellers": self.sellers,
                 "clients": self.clients,
@@ -183,13 +183,13 @@ class ContractHandler:
     
     def __register(self):
         self.waitList = self.__read_key("waitList")
-        self.organizations = self.__read_key("organizations")
+        self.organizations = self.__read_key("organizations") # TODO
 
         type = find_string(self.__call_transaction.params, "type")
         name = find_string(self.__call_transaction.params, "name")
         description = find_string(self.__call_transaction.params, "description")
         region = find_string(self.__call_transaction.params, "region")
-        pbk = self.__call_transaction.senderPublicKey;
+        pbk = self.__call_transaction.sender_public_key; # TODO
         phone = find_string(self.__call_transaction.params, "phone")
         fio = find_string(self.__call_transaction.params, "fio")
         
@@ -202,14 +202,14 @@ class ContractHandler:
 
         if type == "dist":
             if name is None: self.__set_error("Organization name is required")
-            user = Dist({"balance":100, "organization_name": name, "region": 
+            user = Dist({"balance":100, "organization_name": name, "region": #
                          region, "phone": phone, "fio": fio, "public_key": pbk})
             self.__push_waitList(user, self.__call_transaction.sender)
-            self.__reg_organization(organization_name=name, pbk=pbk)
+            self.__reg_organization(organization_name=name, pbk=pbk) # TODO
         elif type == "client":
             user = Client({"balance":100, "region": 
                          region, "phone": phone, "fio": fio, "public_key": pbk})
-            self.__push_waitList(user, self.__call_transaction.sender)
+            self.__push_waitList(user, self.__call_transaction.sender) # TODO
         elif type == "seller":
             if name is None: self.__set_error("Seller name is required")
             if description is None: self.__set_error("Description name is required")
@@ -223,9 +223,9 @@ class ContractHandler:
             data_entry_pb2.DataEntry(key="organizations", string_value=json.dumps(self.organizations))
         ])
 
-    def __register_operator(self):
+    def __register_operator(self): # TODO
         self.operators = self.__read_key("operators")
-        pbk = self.__call_transaction.senderPublicKey;
+        pbk = self.__call_transaction.sender_public_key;
         phone = find_string(self.__call_transaction.params, "phone")
         fio = find_string(self.__call_transaction.params, "fio")
         
@@ -246,7 +246,7 @@ class ContractHandler:
     def __reg_organization(self, organization_name, pbk):
         self.organizations = self.__read_key("organizations")
 
-        if organization_name not in self.organizations:
+        if organization_name not in self.organizations: # TODO
             new_organization = Organization({"name": organization_name, "workers": [pbk]})
             self.__push_organizations(new_organization, organization_name)
         else:
@@ -268,7 +268,7 @@ class ContractHandler:
         title = find_string(self.__call_transaction.params, "title")
         description = find_string(self.__call_transaction.params, "description")
         regions = find_string(self.__call_transaction.params, "regions")
-        pk = self.__call_transaction.senderPublicKey;
+        pk = self.__call_transaction.sender_public_key
         # pk = find_string(self.__call_transaction.params, "public_key")
         price = find_int(self.__call_transaction.params, "price")
 
@@ -326,7 +326,7 @@ class ContractHandler:
                 self.__set_error("Can't find product with this id")
 
             org_data = json.loads(self.products[id])
-            if  region not in org_data["regions"]:
+            if  region not in org_data["regions"]:  # TODO
                 self.__set_error("You can't buy this product in this region")
             if amount > org_data["max"]:
                 self.__set_error("You can't buy this amount")
@@ -369,7 +369,7 @@ class ContractHandler:
         current_product = None
         for prod_id, prod_data_json in self.productWait.items():
             prod_data = json.loads(prod_data_json)
-            if isinstance(prod_data, dict) and "title" in prod_data and prod_data["title"] == title:
+            if isinstance(prod_data, dict) and "title" in prod_data and prod_data["title"] == title: # TODO
                 current_product = prod_data
                 break
 
