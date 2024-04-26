@@ -1,21 +1,19 @@
-710d93433475
+hash: ec0fdac8d050689174779728c8436ccaae307e9566bfe1d092eddca075e72213
 
-hash: 710d93433475525f32744013652e3367777962da35c483ee56af8f50e54686d6
+version: - 1
 
-version: - 11
+id: BWH2gc7ymr1CkNtVBrR2Zz9abKh11VVLsHD2B6kGchrn
 
-id: 7pYokMpgxfkYbjZFcy4qMc3gyNfSYLc9hX121t2ZXKfQ
-
-tokenID: 3uEkGk7KJcWgg2PMAEbxMgwGv6QwkXGjrfGiJ7vXoSCd
+tokenID: 5GXaMm4nRsP4JMkMgRitLJfiaf9q8QF5MeLk8g4HZAws
 
 {
   "type": 103,
   "version": 2,
-  "sender": "3NuGr9uc7UkJ6MiEx5UJsRcFVhRts3DHtm3",
-  "password": "Mj-E4gYbLR1L2-4ha4LGBQ",
+  "sender": "3P1dwtfPn9PKsttX5enuhtfFWQXu2aLGcn8",
+  "password": "gwhcy6lr0Nk98c6AAlXMnA",
   "image": "localhost:5000/shop",
   "contractName": "shop",
-  "imageHash": "d04985f9e29f4e4a9e3afaeeb2e1d4b9227c1a7d9dcc4b125edeac4c9e7b3219",
+  "imageHash": "ec0fdac8d050689174779728c8436ccaae307e9566bfe1d092eddca075e72213",
   "params": [],
   "fee": 0,
   "feeAssetId": null
@@ -27,7 +25,7 @@ tokenID: 3uEkGk7KJcWgg2PMAEbxMgwGv6QwkXGjrfGiJ7vXoSCd
   "sender" : "3NuGr9uc7UkJ6MiEx5UJsRcFVhRts3DHtm3",
   "password": "Mj-E4gYbLR1L2-4ha4LGBQ",
   "fee" : 0,
-  "contractId" : "7pYokMpgxfkYbjZFcy4qMc3gyNfSYLc9hX121t2ZXKfQ",
+  "contractId" : "BWH2gc7ymr1CkNtVBrR2Zz9abKh11VVLsHD2B6kGchrn",
   "imageHash" : "710d93433475525f32744013652e3367777962da35c483ee56af8f50e54686d6",
   "type" : 107,
   "version" : 2

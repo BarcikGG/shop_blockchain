@@ -1,9 +1,9 @@
 // reg operator
 {
-    "contractId": "7pYokMpgxfkYbjZFcy4qMc3gyNfSYLc9hX121t2ZXKfQ",
+    "contractId": "BWH2gc7ymr1CkNtVBrR2Zz9abKh11VVLsHD2B6kGchrn",
     "fee": 0,
-    "sender": "3NuGr9uc7UkJ6MiEx5UJsRcFVhRts3DHtm3",
-    "password": "Mj-E4gYbLR1L2-4ha4LGBQ",
+    "sender": "3P1dwtfPn9PKsttX5enuhtfFWQXu2aLGcn8",
+    "password": "gwhcy6lr0Nk98c6AAlXMnA",
     "type": 104,
     "params":
     [
@@ -11,11 +11,6 @@
            "type": "string",
            "key": "action",
            "value": "register_operator"
-        },
-        {
-           "type": "string",
-           "key": "public_key",
-           "value": "CaymqQhs2bLyNbLRQ8a1VKqWq5zQju43jQpHUnv4aSjV"
         },
         {
            "type": "string",
@@ -31,13 +26,13 @@
         }
     ],
     "version": 2,
-    "contractVersion": 5
+    "contractVersion": 1
 }
 
 
 // reg selelr
 {
-    "contractId": "7pYokMpgxfkYbjZFcy4qMc3gyNfSYLc9hX121t2ZXKfQ",
+    "contractId": "BWH2gc7ymr1CkNtVBrR2Zz9abKh11VVLsHD2B6kGchrn",
     "fee": 0,
     "sender": "3NrDfz3HxTdjk1CFoAEtCN1rZUxvKbPoNb9",
     "password": "LCYvocZgUguI4Q7KW6sqPQ",
@@ -89,7 +84,7 @@
 
 //reg dist 
 {
-    "contractId": "7pYokMpgxfkYbjZFcy4qMc3gyNfSYLc9hX121t2ZXKfQ",
+    "contractId": "BWH2gc7ymr1CkNtVBrR2Zz9abKh11VVLsHD2B6kGchrn",
     "fee": 0,
     "sender": "3NqL9EMG2HueKYXmz5pKxJTDjVazbPQme9c",
     "password": "yZKeuFD7QWqUDkZup5xAGg",
@@ -140,10 +135,10 @@
 
 //confirm account 
 {
-    "contractId": "7pYokMpgxfkYbjZFcy4qMc3gyNfSYLc9hX121t2ZXKfQ",
+    "contractId": "BWH2gc7ymr1CkNtVBrR2Zz9abKh11VVLsHD2B6kGchrn",
     "fee": 0,
-    "sender": "3NuGr9uc7UkJ6MiEx5UJsRcFVhRts3DHtm3",
-    "password": "Mj-E4gYbLR1L2-4ha4LGBQ",
+    "sender": "3P1dwtfPn9PKsttX5enuhtfFWQXu2aLGcn8",
+    "password": "gwhcy6lr0Nk98c6AAlXMnA",
     "type": 104,
     "params":
     [
@@ -160,7 +155,7 @@
         {
            "type": "string",
            "key": "account",
-           "value": ""
+           "value": "3Nx38NJhdvMtXs3F149Z28syyixAZ8gvpeR"
         }
     ],
     "version": 2,
@@ -169,7 +164,7 @@
 
 //create product
 {
-    "contractId": "7pYokMpgxfkYbjZFcy4qMc3gyNfSYLc9hX121t2ZXKfQ",
+    "contractId": "BWH2gc7ymr1CkNtVBrR2Zz9abKh11VVLsHD2B6kGchrn",
     "fee": 0,
     "sender": "3NqL9EMG2HueKYXmz5pKxJTDjVazbPQme9c",
     "password": "yZKeuFD7QWqUDkZup5xAGg",
@@ -208,10 +203,10 @@
 
 //accept_product
 {
-    "contractId": "7pYokMpgxfkYbjZFcy4qMc3gyNfSYLc9hX121t2ZXKfQ",
+    "contractId": "BWH2gc7ymr1CkNtVBrR2Zz9abKh11VVLsHD2B6kGchrn",
     "fee": 0,
     "sender": "3NuGr9uc7UkJ6MiEx5UJsRcFVhRts3DHtm3",
-    "password": "Mj-E4gYbLR1L2-4ha4LGBQ",
+    "password": "gwhcy6lr0Nk98c6AAlXMnA",
     "type": 104,
     "params":
     [
@@ -257,7 +252,7 @@
 
 //buy product
 {
-    "contractId": "7pYokMpgxfkYbjZFcy4qMc3gyNfSYLc9hX121t2ZXKfQ",
+    "contractId": "BWH2gc7ymr1CkNtVBrR2Zz9abKh11VVLsHD2B6kGchrn",
     "fee": 0,
     "sender": "3NuuxfRrFc6rdHPSNiBR4QTdGLuFUY8i6Vh",
     "password": "777",
@@ -300,10 +295,10 @@
 
 // delete 
 {
-    "contractId": "7pYokMpgxfkYbjZFcy4qMc3gyNfSYLc9hX121t2ZXKfQ",
+    "contractId": "BWH2gc7ymr1CkNtVBrR2Zz9abKh11VVLsHD2B6kGchrn",
     "fee": 0,
     "sender": "3NuGr9uc7UkJ6MiEx5UJsRcFVhRts3DHtm3",
-    "password": "Mj-E4gYbLR1L2-4ha4LGBQ",
+    "password": "gwhcy6lr0Nk98c6AAlXMnA",
     "type": 104,
     "params":
     [
