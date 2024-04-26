@@ -1,6 +1,6 @@
-hash: ec0fdac8d050689174779728c8436ccaae307e9566bfe1d092eddca075e72213
+hash: 2ae8411d0983800364ebd51f16d7a972401aa85fb69808a0b64b4532fa0c1543
 
-version: - 1
+version: - 2
 
 id: BWH2gc7ymr1CkNtVBrR2Zz9abKh11VVLsHD2B6kGchrn
 
@@ -22,11 +22,23 @@ tokenID: 5GXaMm4nRsP4JMkMgRitLJfiaf9q8QF5MeLk8g4HZAws
 //update
 {
   "image" : "localhost:5000/shop",
-  "sender" : "3NuGr9uc7UkJ6MiEx5UJsRcFVhRts3DHtm3",
-  "password": "Mj-E4gYbLR1L2-4ha4LGBQ",
+  "sender" : "3P1dwtfPn9PKsttX5enuhtfFWQXu2aLGcn8",
+  "password": "gwhcy6lr0Nk98c6AAlXMnA",
   "fee" : 0,
   "contractId" : "BWH2gc7ymr1CkNtVBrR2Zz9abKh11VVLsHD2B6kGchrn",
-  "imageHash" : "710d93433475525f32744013652e3367777962da35c483ee56af8f50e54686d6",
+  "imageHash" : "2ae8411d0983800364ebd51f16d7a972401aa85fb69808a0b64b4532fa0c1543",
   "type" : 107,
   "version" : 2
+}
+
+// send assetId
+{
+  "type": 4,
+  "version": 2,
+  "sender": "3P1dwtfPn9PKsttX5enuhtfFWQXu2aLGcn8",
+  "password": "gwhcy6lr0Nk98c6AAlXMnA",
+  "recipient": "3Nx38NJhdvMtXs3F149Z28syyixAZ8gvpeR",
+  "amount": 10000,
+  "assetId": "5GXaMm4nRsP4JMkMgRitLJfiaf9q8QF5MeLk8g4HZAws",
+  "fee": 0
 }

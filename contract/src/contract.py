@@ -107,6 +107,10 @@ class ContractHandler:
         self.productWait = self.__read_key("productWait")
         self.products = self.__read_key("products")
         self.operators = self.__read_key("operators")
+        self.clients = self.__read_key("clients")
+        self.sellers = self.__read_key("sellers")
+        self.dists = self.__read_key("dists")
+
         account_key = find_string(self.__call_transaction.params, "key")
         type = find_string(self.__call_transaction.params, "type")
         
@@ -202,6 +206,7 @@ class ContractHandler:
             user = Seller({"balance":100, "seller_name": name, "description": description, "region": 
                          region, "phone": phone, "fio": fio, "public_key": pbk})
             self.__push_waitList(user, self.__call_transaction.sender)
+            self.__reg_organization(organization_name=name, pbk=pbk)
 
         self.__write_data([
             data_entry_pb2.DataEntry(key="waitList",string_value=json.dumps(self.waitList)),

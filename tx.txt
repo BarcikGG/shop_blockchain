@@ -34,8 +34,8 @@
 {
     "contractId": "BWH2gc7ymr1CkNtVBrR2Zz9abKh11VVLsHD2B6kGchrn",
     "fee": 0,
-    "sender": "3NrDfz3HxTdjk1CFoAEtCN1rZUxvKbPoNb9",
-    "password": "LCYvocZgUguI4Q7KW6sqPQ",
+    "sender": "3NeRhvAa5pB1GhKCVkp8JYa4s2MsXgEztTX",
+    "password": "bLVAVtb2Sg-dwT_eOQjRWg",
     "type": 104,
     "params":
     [
@@ -78,7 +78,7 @@
         }
     ],
     "version": 2,
-    "contractVersion": 10
+    "contractVersion": 2
 }
 
 
@@ -166,8 +166,8 @@
 {
     "contractId": "BWH2gc7ymr1CkNtVBrR2Zz9abKh11VVLsHD2B6kGchrn",
     "fee": 0,
-    "sender": "3NqL9EMG2HueKYXmz5pKxJTDjVazbPQme9c",
-    "password": "yZKeuFD7QWqUDkZup5xAGg",
+    "sender": "3NeRhvAa5pB1GhKCVkp8JYa4s2MsXgEztTX",
+    "password": "bLVAVtb2Sg-dwT_eOQjRWg",
     "type": 104,
     "params":
     [
@@ -195,17 +195,22 @@
            "type": "string",
            "key": "regions",
            "value": "Moscow"
+        },
+        {
+           "type": "integer",
+           "key": "price",
+           "value": 200
         }
     ],
     "version": 2,
-    "contractVersion": 1
+    "contractVersion": 2
 }
 
 //accept_product
 {
     "contractId": "BWH2gc7ymr1CkNtVBrR2Zz9abKh11VVLsHD2B6kGchrn",
     "fee": 0,
-    "sender": "3NuGr9uc7UkJ6MiEx5UJsRcFVhRts3DHtm3",
+    "sender": "3P1dwtfPn9PKsttX5enuhtfFWQXu2aLGcn8",
     "password": "gwhcy6lr0Nk98c6AAlXMnA",
     "type": 104,
     "params":
@@ -216,19 +221,14 @@
            "value": "accept_product"
         },
         {
-           "type": "string",
+           "type": "integer",
            "key": "max",
-           "value": "100"
+           "value": 100
         },
         {
-           "type": "string",
+           "type": "integer",
            "key": "min",
-           "value": "1"
-        },
-        {
-           "type": "string",
-           "key": "seller_pk",
-           "value": "CsLkijAEjMmTqkefSRAZekb7wvYVnGXSAqVWiJnjcubb"
+           "value": 2
         },
         {
            "type": "string",
@@ -238,16 +238,16 @@
         {
          "type": "string",
            "key": "id",
-           "value": "20855"
+           "value": "73608"
         },
         {
            "type": "string",
            "key": "sellers",
-           "value": "Apple"
+           "value": "3NeRhvAa5pB1GhKCVkp8JYa4s2MsXgEztTX"
         }
     ],
     "version": 2,
-    "contractVersion": 1
+    "contractVersion": 2
 }
 
 //buy product
@@ -282,10 +282,7 @@
     ],
     "payments": [
       {
-        "amount": 100
-      },
-      {
-        "assetId": "SOME_ASSET_ID",
+        "assetId": "5GXaMm4nRsP4JMkMgRitLJfiaf9q8QF5MeLk8g4HZAws",
         "amount": 100
       }
     ],
