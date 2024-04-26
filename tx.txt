@@ -286,7 +286,7 @@
         "amount": 100
       }
     ],
-    "version": 2,
+    "version": 5,
     "contractVersion": 2
 }
 

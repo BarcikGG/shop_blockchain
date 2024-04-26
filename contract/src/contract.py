@@ -288,10 +288,10 @@ class ContractHandler:
     def __withdraw(self):
         try:
             self.orders = self.__read_key("orders")
-            id = find_int(self.__call_transaction.params, "order_id")
+            id = find_string(self.__call_transaction.params, "order_id")
             
             order_data = json.loads(self.orders[id])
-            if self.__call_transaction.sender == order_data["seller"]:
+            if self.__call_transaction.sender_public_key == order_data["seller"]:
                 recipient = self.__call_transaction.sender
                 amount = order_data["total_price"]
             else:
