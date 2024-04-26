@@ -189,7 +189,7 @@ class ContractHandler:
         name = find_string(self.__call_transaction.params, "name")
         description = find_string(self.__call_transaction.params, "description")
         region = find_string(self.__call_transaction.params, "region")
-        pbk = self.__call_transaction.senderPublicKey;
+        pbk = self.__call_transaction.sender_public_key;
         phone = find_string(self.__call_transaction.params, "phone")
         fio = find_string(self.__call_transaction.params, "fio")
         
@@ -225,7 +225,7 @@ class ContractHandler:
 
     def __register_operator(self):
         self.operators = self.__read_key("operators")
-        pbk = self.__call_transaction.senderPublicKey;
+        pbk = self.__call_transaction.sender_public_key;
         phone = find_string(self.__call_transaction.params, "phone")
         fio = find_string(self.__call_transaction.params, "fio")
         
@@ -268,7 +268,7 @@ class ContractHandler:
         title = find_string(self.__call_transaction.params, "title")
         description = find_string(self.__call_transaction.params, "description")
         regions = find_string(self.__call_transaction.params, "regions")
-        pk = self.__call_transaction.senderPublicKey;
+        pk = self.__call_transaction.sender_public_key
         # pk = find_string(self.__call_transaction.params, "public_key")
         price = find_int(self.__call_transaction.params, "price")
 
