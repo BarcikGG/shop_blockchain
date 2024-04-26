@@ -102,142 +102,154 @@ class ContractHandler:
             self.__set_error(error)
 
     def __delete(self):
-        self.waitList = self.__read_key("waitList")
-        self.organizations = self.__read_key("organizations")
-        self.productWait = self.__read_key("productWait")
-        self.products = self.__read_key("products")
-        self.operators = self.__read_key("operators")
-        self.clients = self.__read_key("clients")
-        self.sellers = self.__read_key("sellers")
-        self.dists = self.__read_key("dists")
+        try:
+            self.waitList = self.__read_key("waitList")
+            self.organizations = self.__read_key("organizations")
+            self.productWait = self.__read_key("productWait")
+            self.products = self.__read_key("products")
+            self.operators = self.__read_key("operators")
+            self.clients = self.__read_key("clients")
+            self.sellers = self.__read_key("sellers")
+            self.dists = self.__read_key("dists")
 
-        account_key = find_string(self.__call_transaction.params, "key")
-        type = find_string(self.__call_transaction.params, "type")
-        
-        if self.__call_transaction.sender not in self.operators:
-            self.__set_error("You are not operator!")
-        if account_key is None: self.__set_error("Key is required")
+            account_key = find_string(self.__call_transaction.params, "key")
+            type = find_string(self.__call_transaction.params, "type")
+            
+            if self.__call_transaction.sender not in self.operators:
+                self.__set_error("You are not operator!")
+            if account_key is None: self.__set_error("Key is required")
 
-        if type == "dist":
-            self.dists.pop(account_key)
-        elif type == "seller":
-            self.sellers.pop(account_key)
-        elif type == "client":
-            self.clients.pop(account_key)
-        elif type == "waitList":
-            self.waitList.pop(account_key)
-        elif type == "productWait":
-            self.productWait.pop(account_key)
-        elif type == "products":
-            self.products.pop(account_key)
-        elif type == "organizations":
-            self.organizations.pop(account_key)
-        else:
-            self.__set_error("Wrong type")
-        
-        self.__write_data([
-            data_entry_pb2.DataEntry(key="dists", string_value=json.dumps(self.dists)),
-            data_entry_pb2.DataEntry(key="sellers", string_value=json.dumps(self.sellers)),
-            data_entry_pb2.DataEntry(key="clients", string_value=json.dumps(self.clients)),
-            data_entry_pb2.DataEntry(key="waitList", string_value=json.dumps(self.waitList)),
-            data_entry_pb2.DataEntry(key="productWait", string_value=json.dumps(self.productWait)),
-            data_entry_pb2.DataEntry(key="products", string_value=json.dumps(self.products)),
-            data_entry_pb2.DataEntry(key="organizations", string_value=json.dumps(self.organizations))
-        ])
+            if type == "dist":
+                self.dists.pop(account_key)
+            elif type == "seller":
+                self.sellers.pop(account_key)
+            elif type == "client":
+                self.clients.pop(account_key)
+            elif type == "waitList":
+                self.waitList.pop(account_key)
+            elif type == "productWait":
+                self.productWait.pop(account_key)
+            elif type == "products":
+                self.products.pop(account_key)
+            elif type == "organizations":
+                self.organizations.pop(account_key)
+            else:
+                self.__set_error("Wrong type")
+            
+            self.__write_data([
+                data_entry_pb2.DataEntry(key="dists", string_value=json.dumps(self.dists)),
+                data_entry_pb2.DataEntry(key="sellers", string_value=json.dumps(self.sellers)),
+                data_entry_pb2.DataEntry(key="clients", string_value=json.dumps(self.clients)),
+                data_entry_pb2.DataEntry(key="waitList", string_value=json.dumps(self.waitList)),
+                data_entry_pb2.DataEntry(key="productWait", string_value=json.dumps(self.productWait)),
+                data_entry_pb2.DataEntry(key="products", string_value=json.dumps(self.products)),
+                data_entry_pb2.DataEntry(key="organizations", string_value=json.dumps(self.organizations))
+            ])
+        except BaseException as error:
+            self.__set_error(str(error))
 
     def __confirm_registration(self):
-        self.waitList = self.__read_key("waitList")
-        self.operators = self.__read_key("operators")
-        account_key = find_string(self.__call_transaction.params, "account")
-        account_type = find_string(self.__call_transaction.params, "type")
-        
-        if self.__call_transaction.sender not in self.operators:
-            self.__set_error("You are not operator!")
-        if account_key is None: self.__set_error("Accepted account is required")
+        try:
+            self.waitList = self.__read_key("waitList")
+            self.operators = self.__read_key("operators")
+            account_key = find_string(self.__call_transaction.params, "account")
+            account_type = find_string(self.__call_transaction.params, "type")
+            
+            if self.__call_transaction.sender not in self.operators:
+                self.__set_error("You are not operator!")
+            if account_key is None: self.__set_error("Accepted account is required")
 
-        if account_type == "dist":
-            self.dists[account_key] = self.waitList.pop(account_key)
-        elif account_type == "seller":
-            self.sellers[account_key] = self.waitList.pop(account_key)
-        elif account_type == "client":
-            self.clients[account_key] = self.waitList.pop(account_key)
-        else:
-            self.__set_error("Wrong type. Choose: dist, seller, client")
-        
-        self.__write_data([
-            data_entry_pb2.DataEntry(key="dists", string_value=json.dumps(self.dists)),
-            data_entry_pb2.DataEntry(key="sellers", string_value=json.dumps(self.sellers)),
-            data_entry_pb2.DataEntry(key="clients", string_value=json.dumps(self.clients)),
-            data_entry_pb2.DataEntry(key="waitList", string_value=json.dumps(self.waitList))
-        ])
+            if account_type == "dist":
+                self.dists[account_key] = self.waitList.pop(account_key)
+            elif account_type == "seller":
+                self.sellers[account_key] = self.waitList.pop(account_key)
+            elif account_type == "client":
+                self.clients[account_key] = self.waitList.pop(account_key)
+            else:
+                self.__set_error("Wrong type. Choose: dist, seller, client")
+            
+            self.__write_data([
+                data_entry_pb2.DataEntry(key="dists", string_value=json.dumps(self.dists)),
+                data_entry_pb2.DataEntry(key="sellers", string_value=json.dumps(self.sellers)),
+                data_entry_pb2.DataEntry(key="clients", string_value=json.dumps(self.clients)),
+                data_entry_pb2.DataEntry(key="waitList", string_value=json.dumps(self.waitList))
+            ])
+        except BaseException as error:
+            self.__set_error(str(error))
     
     def __register(self):
-        self.waitList = self.__read_key("waitList")
-        self.organizations = self.__read_key("organizations")
+        try:
+            self.waitList = self.__read_key("waitList")
+            type = find_string(self.__call_transaction.params, "type")
+            name = find_string(self.__call_transaction.params, "name")
+            description = find_string(self.__call_transaction.params, "description")
+            region = find_string(self.__call_transaction.params, "region")
+            pbk = self.__call_transaction.sender_public_key
+            phone = find_string(self.__call_transaction.params, "phone")
+            fio = find_string(self.__call_transaction.params, "fio")
+            
+            if self.__call_transaction.sender in self.waitList:
+                self.__set_error("User is already in wait list")
+            
+            if type is None: self.__set_error("Type is required: dist, seller, client")
+            if region is None: self.__set_error("Region is required")
 
-        type = find_string(self.__call_transaction.params, "type")
-        name = find_string(self.__call_transaction.params, "name")
-        description = find_string(self.__call_transaction.params, "description")
-        region = find_string(self.__call_transaction.params, "region")
-        pbk = self.__call_transaction.sender_public_key
-        phone = find_string(self.__call_transaction.params, "phone")
-        fio = find_string(self.__call_transaction.params, "fio")
-        
-        if self.__call_transaction.sender in self.waitList:
-            self.__set_error("User is already in wait list")
-        
-        if pbk is None: self.__set_error("PBK is required")
-        if type is None: self.__set_error("Type is required: dist, seller, client")
-        if region is None: self.__set_error("Region is required")
+            if type == "dist":
+                if name is None: self.__set_error("Organization name is required")
+                user = Dist({"organization_name": name, "region": 
+                            region, "phone": phone, "fio": fio, "public_key": pbk})
+                self.__push_waitList(user, self.__call_transaction.sender)
+                self.__reg_organization(organization_name=name, pbk=pbk, type=type)
+            elif type == "client":
+                user = Client({"region": 
+                            region, "phone": phone, "fio": fio, "public_key": pbk})
+                self.__push_waitList(user, self.__call_transaction.sender)
+            elif type == "seller":
+                if name is None: self.__set_error("Seller name is required")
+                if description is None: self.__set_error("Description name is required")
+                user = Seller({"seller_name": name, "description": description, "region": 
+                            region, "phone": phone, "fio": fio, "public_key": pbk})
+                self.__push_waitList(user, self.__call_transaction.sender)
+                self.__reg_organization(organization_name=name, pbk=pbk, type=type)
 
-        if type == "dist":
-            if name is None: self.__set_error("Organization name is required")
-            user = Dist({"balance":100, "organization_name": name, "region": 
-                         region, "phone": phone, "fio": fio, "public_key": pbk})
-            self.__push_waitList(user, self.__call_transaction.sender)
-            self.__reg_organization(organization_name=name, pbk=pbk)
-        elif type == "client":
-            user = Client({"balance":100, "region": 
-                         region, "phone": phone, "fio": fio, "public_key": pbk})
-            self.__push_waitList(user, self.__call_transaction.sender)
-        elif type == "seller":
-            if name is None: self.__set_error("Seller name is required")
-            if description is None: self.__set_error("Description name is required")
-            user = Seller({"balance":100, "seller_name": name, "description": description, "region": 
-                         region, "phone": phone, "fio": fio, "public_key": pbk})
-            self.__push_waitList(user, self.__call_transaction.sender)
-            self.__reg_organization(organization_name=name, pbk=pbk)
-
-        self.__write_data([
-            data_entry_pb2.DataEntry(key="waitList",string_value=json.dumps(self.waitList)),
-            data_entry_pb2.DataEntry(key="organizations", string_value=json.dumps(self.organizations))
-        ])
+            self.__write_data([
+                data_entry_pb2.DataEntry(key="waitList",string_value=json.dumps(self.waitList)),
+                data_entry_pb2.DataEntry(key="organizations", string_value=json.dumps(self.organizations))
+            ])
+        except BaseException as error:
+            self.__set_error(str(error))
 
     def __register_operator(self):
-        self.operators = self.__read_key("operators")
-        pbk = self.__call_transaction.sender_public_key
-        phone = find_string(self.__call_transaction.params, "phone")
-        fio = find_string(self.__call_transaction.params, "fio")
-        
-        if self.__call_transaction.sender in self.operators:
-            self.__set_error("User already registered")
-        
-        if pbk is None: self.__set_error("PBK is required")
-        if phone is None: self.__set_error("Phone is required")
-        if fio is None: self.__set_error("FIO is required")
+        try:
+            self.operators = self.__read_key("operators")
+            owner = self.__read_key("owner")
+            pbk = self.__call_transaction.sender_public_key
+            phone = find_string(self.__call_transaction.params, "phone")
+            fio = find_string(self.__call_transaction.params, "fio")
+            
+            if self.__call_transaction.sender != owner:
+                self.__set_error("Only owner can register operator")
 
-        user = Operator({"balance":100, "phone": phone, "fio": fio, "public_key": pbk})
-    
-        self.operators[self.__call_transaction.sender] = user.objToStr()
-        self.__write_data([
-            data_entry_pb2.DataEntry(key="operators",string_value=json.dumps(self.operators))
-        ])
+            if self.__call_transaction.sender in self.operators:
+                self.__set_error("User already registered")
+            
+            if phone is None: self.__set_error("Phone is required")
+            if fio is None: self.__set_error("FIO is required")
 
-    def __reg_organization(self, organization_name, pbk):
+            user = Operator({"phone": phone, "fio": fio, "public_key": pbk})
+        
+            self.operators[self.__call_transaction.sender] = user.objToStr()
+            self.__write_data([
+                data_entry_pb2.DataEntry(key="operators",string_value=json.dumps(self.operators))
+            ])
+        except BaseException as error:
+            self.__set_error(str(error))
+
+    def __reg_organization(self, organization_name, pbk, type):
         self.organizations = self.__read_key("organizations")
 
         if organization_name not in self.organizations:
-            new_organization = Organization({"name": organization_name, "workers": [pbk]})
+            new_organization = Organization({"name": organization_name, "type": type, "workers": [pbk]})
             self.__push_organizations(new_organization, organization_name)
         else:
             for org_name, org_data in self.organizations.items():
@@ -251,51 +263,59 @@ class ContractHandler:
                     break
     
     def __create_product(self):
-        id_generator = IDGenerator()
-        self.productWait = self.__read_key("productWait")
-        self.organizations = self.__read_key("organizations")
+        try:
+            id_generator = IDGenerator()
+            self.productWait = self.__read_key("productWait")
+            self.organizations = self.__read_key("organizations")
+            self.sellers = self.__read_key("sellers")
+        
+            title = find_string(self.__call_transaction.params, "title")
+            description = find_string(self.__call_transaction.params, "description")
+            regions = find_string(self.__call_transaction.params, "regions")
+            pk = self.__call_transaction.sender_public_key
+            price = find_int(self.__call_transaction.params, "price")
+
+            if title is None:
+                self.__set_error("Name can't be empty")
+            if price is None:
+                self.__set_error("price key can't be empty")
+            
+            worker_found = False
+
+            if self.__call_transaction.sender not in self.sellers:
+                self.__set_error("You are not a seller")
+            
+            for org_name, org_data_json in self.organizations.items():
+                org_data = json.loads(org_data_json)
+                if "workers" in org_data and pk in org_data["workers"]:
+                    worker_found = True
+                    break
+
+            if not worker_found:
+                self.__set_error("Can't find worker for this pk")
+
+            product_id = id_generator.generate_id()
+            product = ProductWait({"title": title, "description": description, 
+                                "regions": [regions], "added": pk, "price": price})
+            self.__push_productWait(product, product_id)
+            self.__write_data([data_entry_pb2.DataEntry(key="productWait", string_value=json.dumps(self.productWait))])
+        except BaseException as error:
+                self.__set_error(str(error))
     
-        title = find_string(self.__call_transaction.params, "title")
-        description = find_string(self.__call_transaction.params, "description")
-        regions = find_string(self.__call_transaction.params, "regions")
-        pk = self.__call_transaction.sender_public_key
-        price = find_int(self.__call_transaction.params, "price")
-
-        if title is None:
-            self.__set_error("Name can't be empty")
-        if pk is None:
-            self.__set_error("Public key can't be empty")
-        if price is None:
-            self.__set_error("price key can't be empty")
-        
-        worker_found = False
-        
-        for org_name, org_data_json in self.organizations.items():
-            org_data = json.loads(org_data_json)
-            if "workers" in org_data and pk in org_data["workers"]:
-                worker_found = True
-                break
-
-        if not worker_found:
-            self.__set_error("Can't find worker for this pk")
-
-        product_id = id_generator.generate_id()
-        product = ProductWait({"title": title, "description": description, 
-                               "regions": [regions], "added": pk, "price": price})
-        self.__push_productWait(product, product_id)
-        self.__write_data([data_entry_pb2.DataEntry(key="productWait", string_value=json.dumps(self.productWait))])
-
     def __withdraw(self):
         try:
             self.orders = self.__read_key("orders")
             id = find_string(self.__call_transaction.params, "order_id")
             
             order_data = json.loads(self.orders[id])
-            if self.__call_transaction.sender_public_key == order_data["seller"]:
-                recipient = self.__call_transaction.sender
-                amount = order_data["total_price"]
-            else:
+            if self.__call_transaction.sender_public_key != order_data["seller"]:
                 self.__set_error("You are not a seller")
+
+            if order_data["status"] != 'approved':
+                self.__set_error("Order wasn't approve")
+
+            recipient = self.__call_transaction.sender
+            amount = order_data["total_price"]
 
             transfer = contract_transfer_out_pb2.ContractTransferOut()
             
@@ -365,50 +385,53 @@ class ContractHandler:
             self.__set_error(str(error))
     
     def __accept_product(self):
-        self.productWait = self.__read_key("productWait")
-        self.products = self.__read_key("products")
-        self.operators = self.__read_key("operators")
-        
-        max = find_int(self.__call_transaction.params, "max")
-        min = find_int(self.__call_transaction.params, "min")
-        sellers = find_string(self.__call_transaction.params, "sellers")
-        title = find_string(self.__call_transaction.params, "title")
-        id = find_string(self.__call_transaction.params, "id")
+        try:
+            self.productWait = self.__read_key("productWait")
+            self.products = self.__read_key("products")
+            self.operators = self.__read_key("operators")
+            
+            max = find_int(self.__call_transaction.params, "max")
+            min = find_int(self.__call_transaction.params, "min")
+            sellers = find_string(self.__call_transaction.params, "sellers")
+            title = find_string(self.__call_transaction.params, "title")
+            id = find_string(self.__call_transaction.params, "id")
 
-        if self.__call_transaction.sender not in self.operators:
-            self.__set_error("You are not operator!")
+            if self.__call_transaction.sender not in self.operators:
+                self.__set_error("You are not operator!")
 
-        if id not in self.productWait:
-            self.__set_error("Can't find product with this id")
+            if id not in self.productWait:
+                self.__set_error("Can't find product with this id")
 
-        if title is None: self.__set_error("Name can't be empty")
-        if max is None: self.__set_error("Max amount can't be empty")
-        if min is None: self.__set_error("Min amount key can't be empty")
-        if sellers is None: self.__set_error("Sellers key can't be empty")
+            if title is None: self.__set_error("Name can't be empty")
+            if max is None: self.__set_error("Max amount can't be empty")
+            if min is None: self.__set_error("Min amount key can't be empty")
+            if sellers is None: self.__set_error("Sellers key can't be empty")
 
-        current_product = None
-        for prod_id, prod_data_json in self.productWait.items():
-            prod_data = json.loads(prod_data_json)
-            if isinstance(prod_data, dict) and "title" in prod_data and prod_data["title"] == title:
-                current_product = prod_data
-                break
+            current_product = None
+            for prod_id, prod_data_json in self.productWait.items():
+                prod_data = json.loads(prod_data_json)
+                if isinstance(prod_data, dict) and "title" in prod_data and prod_data["title"] == title:
+                    current_product = prod_data
+                    break
 
-        if not current_product:
-            self.__set_error("Не удалось найти продукт с таким названием")
+            if not current_product:
+                self.__set_error("Не удалось найти продукт с таким названием")
 
-        description = current_product.get("description", "")
-        regions = current_product.get("regions", [])
-        added = current_product.get("added", "")
-        price = current_product.get("price", 0)
+            description = current_product.get("description", "")
+            regions = current_product.get("regions", [])
+            added = current_product.get("added", "")
+            price = current_product.get("price", 0)
 
-        product = Product({"title": title, "description": description, "regions": regions,
-                           "max": max, "min": min, "sellers": [sellers], "added": added, "price": price})
-        
-        self.productWait.pop(prod_id)
-        self.__push_products(product, prod_id)
-        self.__write_data([
-            data_entry_pb2.DataEntry(key="products",string_value=json.dumps(self.products)),
-            data_entry_pb2.DataEntry(key="productWait",string_value=json.dumps(self.productWait))])
+            product = Product({"title": title, "description": description, "regions": regions,
+                            "max": max, "min": min, "sellers": [sellers], "added": added, "price": price})
+            
+            self.productWait.pop(prod_id)
+            self.__push_products(product, prod_id)
+            self.__write_data([
+                data_entry_pb2.DataEntry(key="products",string_value=json.dumps(self.products)),
+                data_entry_pb2.DataEntry(key="productWait",string_value=json.dumps(self.productWait))])
+        except BaseException as error:
+            self.__set_error(str(error))
     
     def __read_key(self, key) -> dict:
         contract_key_request = contract_contract_service_pb2.ContractKeyRequest(
@@ -445,7 +468,6 @@ class ContractHandler:
 
 class Dist:
     def __init__(self, dictionary) -> None:
-        self.balance = dictionary["balance"]
         self.organization_name = dictionary["organization_name"]
         self.region = dictionary["region"]
         self.phone = dictionary["phone"]
@@ -455,7 +477,6 @@ class Dist:
 
 class Seller:
     def __init__(self, dictionary) -> None:
-        self.balance = dictionary["balance"]
         self.seller_name = dictionary["seller_name"]
         self.description = dictionary["description"]
         self.region = dictionary["region"]
@@ -466,7 +487,6 @@ class Seller:
 
 class Client:
     def __init__(self, dictionary) -> None:
-        self.balance = dictionary["balance"]
         self.region = dictionary["region"]
         self.phone = dictionary["phone"]
         self.fio = dictionary["fio"]
@@ -475,7 +495,6 @@ class Client:
 
 class Operator:
     def __init__(self, dictionary) -> None:
-        self.balance = dictionary["balance"]
         self.phone = dictionary["phone"]
         self.fio = dictionary["fio"]
         self.public_key = dictionary["public_key"]
@@ -493,6 +512,7 @@ class Order:
 class Organization:
     def __init__(self, dictionary) -> None:
         self.name = dictionary["name"]
+        self.type = dictionary["type"]
         self.workers = dictionary["workers"]
     def objToStr(self): return json.dumps(self.__dict__)
 
