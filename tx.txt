@@ -39,8 +39,8 @@
 {
     "contractId": "7pYokMpgxfkYbjZFcy4qMc3gyNfSYLc9hX121t2ZXKfQ",
     "fee": 0,
-    "sender": "3Nt4UzCFBgNm6wcoGGiQmH8TYzhxe9m9iTA",
-    "password": "gEkDmwgzfTVSNXtpBz1eeQ",
+    "sender": "3NrDfz3HxTdjk1CFoAEtCN1rZUxvKbPoNb9",
+    "password": "LCYvocZgUguI4Q7KW6sqPQ",
     "type": 104,
     "params":
     [
@@ -53,11 +53,6 @@
            "type": "string",
            "key": "type",
            "value": "seller"
-        },
-        {
-           "type": "string",
-           "key": "public_key",
-           "value": "BdwGQtwacfhLo1mcVVLZgjQez8B1c9bKmb8hVbag6NPE"
         },
         {
            "type": "string",
@@ -88,7 +83,7 @@
         }
     ],
     "version": 2,
-    "contractVersion": 5
+    "contractVersion": 10
 }
 
 
