@@ -189,7 +189,7 @@ class ContractHandler:
         name = find_string(self.__call_transaction.params, "name")
         description = find_string(self.__call_transaction.params, "description")
         region = find_string(self.__call_transaction.params, "region")
-        pbk = self.__call_transaction.senderPublicKey;
+        pbk = self.__call_transaction.sender_public_key;
         phone = find_string(self.__call_transaction.params, "phone")
         fio = find_string(self.__call_transaction.params, "fio")
         
@@ -225,7 +225,7 @@ class ContractHandler:
 
     def __register_operator(self):
         self.operators = self.__read_key("operators")
-        pbk = self.__call_transaction.senderPublicKey;
+        pbk = self.__call_transaction.sender_public_key;
         phone = find_string(self.__call_transaction.params, "phone")
         fio = find_string(self.__call_transaction.params, "fio")
         
@@ -261,40 +261,42 @@ class ContractHandler:
                     break
     
     def __create_product(self):
-        id_generator = IDGenerator()
-        self.productWait = self.__read_key("productWait")
-        self.organizations = self.__read_key("organizations")
-    
-        title = find_string(self.__call_transaction.params, "title")
-        description = find_string(self.__call_transaction.params, "description")
-        regions = find_string(self.__call_transaction.params, "regions")
-        pk = self.__call_transaction.senderPublicKey;
-        # pk = find_string(self.__call_transaction.params, "public_key")
-        price = find_int(self.__call_transaction.params, "price")
-
-        if title is None:
-            self.__set_error("Name can't be empty")
-        if pk is None:
-            self.__set_error("Public key can't be empty")
-        if price is None:
-            self.__set_error("price key can't be empty")
+        try:
+            id_generator = IDGenerator()
+            self.productWait = self.__read_key("productWait")
+            self.organizations = self.__read_key("organizations")
         
-        worker_found = False
-        
-        for org_name, org_data_json in self.organizations.items():
-            org_data = json.loads(org_data_json)
-            if "workers" in org_data and pk in org_data["workers"]:
-                worker_found = True
-                break
+            title = find_string(self.__call_transaction.params, "title")
+            description = find_string(self.__call_transaction.params, "description")
+            regions = find_string(self.__call_transaction.params, "regions")
+            pk = self.__call_transaction.sender_public_key;
+            price = find_int(self.__call_transaction.params, "price")
 
-        if not worker_found:
-            self.__set_error("Can't find worker for this pk")
+            if title is None:
+                self.__set_error("Name can't be empty")
+            if pk is None:
+                self.__set_error("Public key can't be empty")
+            if price is None:
+                self.__set_error("price key can't be empty")
+            
+            worker_found = False
+            
+            for org_name, org_data_json in self.organizations.items():
+                org_data = json.loads(org_data_json)
+                if "workers" in org_data and pk in org_data["workers"]:
+                    worker_found = True
+                    break
 
-        product_id = id_generator.generate_id()
-        product = ProductWait({"title": title, "description": description, 
-                               "regions": [regions], "added": pk, "price": price})
-        self.__push_productWait(product, product_id)
-        self.__write_data([data_entry_pb2.DataEntry(key="productWait", string_value=json.dumps(self.productWait))])
+            if not worker_found:
+                self.__set_error("Can't find worker for this pk")
+
+            product_id = id_generator.generate_id()
+            product = ProductWait({"title": title, "description": description, 
+                                "regions": [regions], "added": pk, "price": price})
+            self.__push_productWait(product, product_id)
+            self.__write_data([data_entry_pb2.DataEntry(key="productWait", string_value=json.dumps(self.productWait))])
+        except BaseException as error:
+            self.__set_error(str(error))
 
     def __withdraw(self):
         try:
@@ -314,10 +316,17 @@ class ContractHandler:
 
     def __buy_product(self):
         try:
+            sender = self.__call_transaction.sender
             self.products = self.__read_key("products")
+            self.orders = self.__read_key("orders")
+            self.clients = self.__read_key("clients")
             amount = find_int(self.__call_transaction.params, "amount")
             id = find_string(self.__call_transaction.params, "id")
-            region = find_string(self.__call_transaction.params, "regions")
+            
+            generator = IDGenerator()
+            order_id = generator.generate_id()
+            client_data = json.loads(self.clients[sender])
+            region = client_data["region"]
             
             if amount is None:
                 self.__set_error("Amount can't be empty")
@@ -325,20 +334,33 @@ class ContractHandler:
             if id not in self.products:
                 self.__set_error("Can't find product with this id")
 
-            org_data = json.loads(self.products[id])
-            if  region not in org_data["regions"]:
+            prod_data = json.loads(self.products[id])
+            if  region not in prod_data["regions"]:
                 self.__set_error("You can't buy this product in this region")
-            if amount > org_data["max"]:
-                self.__set_error("You can't buy this amount")
+            if amount > prod_data["max"]:
+                self.__set_error("You can't buy this amount (need less)")
+            if amount < prod_data["min"]:
+                self.__set_error("You can't buy this amount (need more)")
             
+            total = prod_data["price"] * amount
             payments = self.__call_transaction.payments
             if len(payments) != 1:
                 self.__set_error("Wrong payments") 
 
             payments_amount = payments[0].amount
-            if payments_amount >= org_data["price"] * amount:
-                # new status for order
-                self.__write_data([data_entry_pb2.DataEntry(key="message", string_value="success")])
+            if payments_amount >= total:
+                order = Order({"client": sender, "product": id, 
+                               "total_price": total, "status": 'created'})
+                
+                prod_data["max"] -= amount
+
+                self.orders[order_id] = order.objToStr()
+                self.products[id] = json.dumps(prod_data)
+                self.__write_data(self.__write_data_entries({
+                        "orders": self.orders,
+                        "sellers": self.sellers
+                    })
+                )
             else: self.__set_error("Not enough money")
         except BaseException as error:
             self.__set_error(str(error))
@@ -465,6 +487,14 @@ class Organization:
     def __init__(self, dictionary) -> None:
         self.name = dictionary["name"]
         self.workers = dictionary["workers"]
+    def objToStr(self): return json.dumps(self.__dict__)
+
+class Order:
+    def __init__(self, dictionary) -> None:
+        self.client = dictionary["client"]
+        self.product = dictionary["product"]
+        self.total_price = dictionary["total_price"]
+        self.status = dictionary["status"]
     def objToStr(self): return json.dumps(self.__dict__)
 
 class ProductWait:
