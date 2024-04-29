@@ -219,10 +219,17 @@ class ContractHandler:
         except BaseException as error:
             self.__set_error(str(error))
 
+    def __read_string(self, key):
+        contract_key_request = contract_contract_service_pb2.ContractKeyRequest(
+            contract_id=self.__call_transaction.contract_id, key=key)
+        contract_key = self.client.GetContractKey(request=contract_key_request, metadata=self.__metadata)
+        return contract_key.entry.string_value
+
     def __register_operator(self):
         try:
             self.operators = self.__read_key("operators")
-            owner = self.__read_key("owner")
+            
+            owner = self.__read_string("owner")
             pbk = self.__call_transaction.sender_public_key
             phone = find_string(self.__call_transaction.params, "phone")
             fio = find_string(self.__call_transaction.params, "fio")

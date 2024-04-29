@@ -1,9 +1,9 @@
 // reg operator
 {
-    "contractId": "BWH2gc7ymr1CkNtVBrR2Zz9abKh11VVLsHD2B6kGchrn",
+    "contractId": "7FkN3UdoBq8thzfYgrYpoaDPmRK59qnCLJkUvXJNN4wW",
     "fee": 0,
-    "sender": "3P1dwtfPn9PKsttX5enuhtfFWQXu2aLGcn8",
-    "password": "gwhcy6lr0Nk98c6AAlXMnA",
+    "sender": "3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp",
+    "password": "DC3_0U7cCGhGQstieg8kHg",
     "type": 104,
     "params":
     [
@@ -32,7 +32,7 @@
 
 // reg selelr
 {
-    "contractId": "BWH2gc7ymr1CkNtVBrR2Zz9abKh11VVLsHD2B6kGchrn",
+    "contractId": "7FkN3UdoBq8thzfYgrYpoaDPmRK59qnCLJkUvXJNN4wW",
     "fee": 0,
     "sender": "3NeRhvAa5pB1GhKCVkp8JYa4s2MsXgEztTX",
     "password": "bLVAVtb2Sg-dwT_eOQjRWg",
@@ -84,7 +84,7 @@
 
 //reg dist 
 {
-    "contractId": "BWH2gc7ymr1CkNtVBrR2Zz9abKh11VVLsHD2B6kGchrn",
+    "contractId": "7FkN3UdoBq8thzfYgrYpoaDPmRK59qnCLJkUvXJNN4wW",
     "fee": 0,
     "sender": "3NqL9EMG2HueKYXmz5pKxJTDjVazbPQme9c",
     "password": "yZKeuFD7QWqUDkZup5xAGg",
@@ -100,11 +100,6 @@
            "type": "string",
            "key": "type",
            "value": "dist"
-        },
-        {
-           "type": "string",
-           "key": "public_key",
-           "value": "5WrGfRG34Vd4qDnSNJXLGYA4SgxLJAeaoQSSpWTj6epq"
         },
         {
            "type": "string",
@@ -135,10 +130,10 @@
 
 //confirm account 
 {
-    "contractId": "BWH2gc7ymr1CkNtVBrR2Zz9abKh11VVLsHD2B6kGchrn",
+    "contractId": "7FkN3UdoBq8thzfYgrYpoaDPmRK59qnCLJkUvXJNN4wW",
     "fee": 0,
-    "sender": "3P1dwtfPn9PKsttX5enuhtfFWQXu2aLGcn8",
-    "password": "gwhcy6lr0Nk98c6AAlXMnA",
+    "sender": "3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp",
+    "password": "DC3_0U7cCGhGQstieg8kHg",
     "type": 104,
     "params":
     [
@@ -164,7 +159,7 @@
 
 //create product
 {
-    "contractId": "BWH2gc7ymr1CkNtVBrR2Zz9abKh11VVLsHD2B6kGchrn",
+    "contractId": "7FkN3UdoBq8thzfYgrYpoaDPmRK59qnCLJkUvXJNN4wW",
     "fee": 0,
     "sender": "3NeRhvAa5pB1GhKCVkp8JYa4s2MsXgEztTX",
     "password": "bLVAVtb2Sg-dwT_eOQjRWg",
@@ -188,11 +183,6 @@
         },
         {
            "type": "string",
-           "key": "public_key",
-           "value": "5WrGfRG34Vd4qDnSNJXLGYA4SgxLJAeaoQSSpWTj6epq"
-        },
-        {
-           "type": "string",
            "key": "regions",
            "value": "Moscow"
         },
@@ -208,10 +198,10 @@
 
 //accept_product
 {
-    "contractId": "BWH2gc7ymr1CkNtVBrR2Zz9abKh11VVLsHD2B6kGchrn",
+    "contractId": "7FkN3UdoBq8thzfYgrYpoaDPmRK59qnCLJkUvXJNN4wW",
     "fee": 0,
-    "sender": "3P1dwtfPn9PKsttX5enuhtfFWQXu2aLGcn8",
-    "password": "gwhcy6lr0Nk98c6AAlXMnA",
+    "sender": "3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp",
+    "password": "DC3_0U7cCGhGQstieg8kHg",
     "type": 104,
     "params":
     [
@@ -252,7 +242,7 @@
 
 //buy product
 {
-    "contractId": "BWH2gc7ymr1CkNtVBrR2Zz9abKh11VVLsHD2B6kGchrn",
+    "contractId": "7FkN3UdoBq8thzfYgrYpoaDPmRK59qnCLJkUvXJNN4wW",
     "fee": 0,
     "sender": "3NuuxfRrFc6rdHPSNiBR4QTdGLuFUY8i6Vh",
     "password": "777",
@@ -292,10 +282,10 @@
 
 // delete 
 {
-    "contractId": "BWH2gc7ymr1CkNtVBrR2Zz9abKh11VVLsHD2B6kGchrn",
+    "contractId": "7FkN3UdoBq8thzfYgrYpoaDPmRK59qnCLJkUvXJNN4wW",
     "fee": 0,
     "sender": "3NuGr9uc7UkJ6MiEx5UJsRcFVhRts3DHtm3",
-    "password": "gwhcy6lr0Nk98c6AAlXMnA",
+    "password": "DC3_0U7cCGhGQstieg8kHg",
     "type": 104,
     "params":
     [
