@@ -1,0 +1,3 @@
+address: 3NuuxfRrFc6rdHPSNiBR4QTdGLuFUY8i6Vh
+public key: 3fUaiTBorsDQWRPRBtRJFNVjdkuTyYTw6yQ3jQRCnN5Z
+password: 777
