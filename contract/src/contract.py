@@ -228,7 +228,6 @@ class ContractHandler:
     def __register_operator(self):
         try:
             self.operators = self.__read_key("operators")
-            
             owner = self.__read_string("owner")
             pbk = self.__call_transaction.sender_public_key
             phone = find_string(self.__call_transaction.params, "phone")
