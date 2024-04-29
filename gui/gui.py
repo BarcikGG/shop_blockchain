@@ -1,6 +1,9 @@
 import requests
+from flask import Flask, jsonify, render_template, request
 import time
 import json
+
+app = Flask(__name__)
 
 BASE_URL = 'http://localhost:'
 ASSETID = '8wPgEHY4MAa6Bn9x1ooYRn3BorS4tDMt2cJc4UC4LqFh'
@@ -17,6 +20,22 @@ GetByKey = 'http://localhost:6862/contracts/'
 Balance = 'http://localhost:6862/assets/balance/'
 BalanceOfContract = 'http://localhost:6862/contracts/asset-balance/7FkN3UdoBq8thzfYgrYpoaDPmRK59qnCLJkUvXJNN4wW/8wPgEHY4MAa6Bn9x1ooYRn3BorS4tDMt2cJc4UC4LqFh'
 
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/profile')
+def about():
+    return render_template('profile.html')
+
+@app.route('/confirm_user', methods=['POST'])
+def confirm_user():
+    data = request.json
+    acc_type = data['acc_type']
+    acc_add = data['acc_add']
+    result = confirmUser(acc_type, acc_add)
+    return jsonify(result)
+
 def getContractBalance():
     response = requests.get(BalanceOfContract)
     return response.json()['balance']
@@ -29,7 +48,7 @@ def checkStatus(transaction_id):
 
     while True:
         iteration+= 1
-        if isinstance(response.json(), 'list') and 'status' in response.json()[-1]:
+        if isinstance(response.json(), list) and 'status' in response.json()[-1]:
             if response.json()[-1]['status'] == 'Success':
                 return response.json()[-1]['status']
             elif response.json()[-1]['status'] == 'Error':
@@ -271,4 +290,7 @@ def buyProduct(prod_id, amount):
 
 # registerClient("3NforeFPihoReVSCc18kriTbwdUamFbifLn", "777", "Moscow", "839849303", "SPS")
 # confirmUser("client", "3NforeFPihoReVSCc18kriTbwdUamFbifLn")
-buyProduct("74169", 5)
+# buyProduct("74169", 5)
+
+if __name__ == '__main__':
+    app.run(debug=True)
