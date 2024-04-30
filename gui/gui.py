@@ -36,6 +36,11 @@ def confirm_user():
     result = confirmUser(acc_type, acc_add)
     return jsonify(result)
 
+@app.route('/contract_balance', methods=['GET'])
+def contract_balance():
+    result = getContractBalance()
+    return result
+
 def getContractBalance():
     response = requests.get(BalanceOfContract)
     return response.json()['balance']

@@ -3,13 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/index.css">
     <title>Main</title>
 </head>
 <body>
     {% include 'header.html' %}
-    <h1>Main page</h1>
+    <div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <h2 style="font-weight: 500;">Contract Balance: </h2>
+            <h2 id="contract_balance"></h2>
+        </div>
+        <button type="button" onclick="getCotractBalance()">refresh</button>
+    </div>
 
-    <form id="myForm">
+    <form id="myForm" style="margin-top: 5vh;">
+        <h2>Accept account from waitlist</h2>
         <label for="acc_type">Account Type:</label>
         <input type="text" id="acc_type" name="acc_type"><br><br>
         <label for="acc_add">Account Address:</label>
@@ -20,25 +28,45 @@
     <div id="response"></div>
 
     <script>
-        function confirmUser() {
-            var acc_type = document.getElementById("acc_type").value;
-            var acc_add = document.getElementById("acc_add").value;
+        async function confirmUser() {
+            try {
+                const accType = document.getElementById("acc_type").value;
+                const accAdd = document.getElementById("acc_add").value;
 
-            document.getElementById("acc_add").value = '';
-            document.getElementById("acc_type").value = '';
-            document.getElementById("response").innerHTML = 'sending...';
+                document.getElementById("acc_add").value = '';
+                document.getElementById("acc_type").value = '';
+                document.getElementById("response").innerHTML = 'sending...';
 
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "/confirm_user");
-            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-            xhr.onload = function () {
-                if (xhr.status == 200) {
-                    document.getElementById("response").innerHTML = xhr.responseText;
-                } else {
-                    document.getElementById("response").innerHTML = "Error: " + xhr.status;
+                const response = await fetch("/confirm_user", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ acc_type: accType, acc_add: accAdd })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Error: " + response.status);
                 }
-            };
-            xhr.send(JSON.stringify({acc_type: acc_type, acc_add: acc_add}));
+
+                const data = await response.text();
+                document.getElementById("response").innerHTML = data;
+            } catch (error) {
+                document.getElementById("response").innerHTML = error.message;
+            }
+        }
+
+        async function getCotractBalance() {
+            try {
+                const response = await fetch("/contract_balance");
+                if (!response.ok) {
+                    throw new Error("Error: " + response.status);
+                }
+                const data = await response.text();
+                document.getElementById("contract_balance").innerHTML = data;
+            } catch (error) {
+                document.getElementById("contract_balance").innerHTML = error.message;
+            }
         }
     </script>
 </body>
