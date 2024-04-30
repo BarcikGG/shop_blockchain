@@ -1,0 +1,25 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    padding-inline: 20vw;
+}
+
+a {
+    text-decoration: none;
+}
+
+input {
+    height: 30px;
+    margin-top: 5px;
+    margin-bottom: 2vh;
+}
+
+#response {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 24px;
+}

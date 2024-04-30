@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Регистрация{% endblock %}
+{% block content %}
+<div style="display: flex; justify-content: center;">
+    <form id="myForm" style="margin-top: 5vh; width: 50%; display: flex; flex-direction: column; justify-content: center;">
+        <h2 style="text-align: center; margin-bottom: 2vh;">Registration</h2>
+        <label for="acc_type">Account Type:</label>
+        <input type="text" id="acc_type" name="acc_type"><br><br>
+        
+        <label for="adr">Address:</label>
+        <input type="text" id="adr" name="adr"><br><br>
+        
+        <label for="password">Password:</label>
+        <input type="text" id="password" name="password"><br><br>
+        
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name"><br><br>
+        
+        <label for="region">Region:</label>
+        <input type="text" id="region" name="region"><br><br>
+
+        <label for="phone">Phone:</label>
+        <input type="text" id="phone" name="phone"><br><br>
+
+        <label for="fio">FIO:</label>
+        <input type="text" id="fio" name="fio"><br><br>
+        <button type="button" 
+            style="height: 50px; background-color: #071bf3; color: #fff; border-radius: 5px;"
+            onclick="registration()">registration</button>
+
+        <div id="response"></div>
+    </form>
+</div>
+    <script>
+        async function registration() {
+            try {
+                const accType = document.getElementById("acc_type").value;
+                const adr = document.getElementById("adr").value;
+                const password = document.getElementById("password").value;
+                const name = document.getElementById("name").value;
+                const region = document.getElementById("region").value;
+                const phone = document.getElementById("phone").value;
+                const fio = document.getElementById("fio").value;
+
+                document.getElementById("adr").value = '';
+                document.getElementById("acc_type").value = '';
+                document.getElementById("password").value = '';
+                document.getElementById("name").value = ''
+                document.getElementById("region").value = ''
+                document.getElementById("phone").value = ''
+                document.getElementById("fio").value = ''
+                document.getElementById("response").innerHTML = 'sending...';
+
+                const response = await fetch("/register_user", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ acc_type: accType, adr: adr, password: password,
+                        name: name, region: region, phone: phone, fio: fio })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Error: " + response.status);
+                }
+
+                const data = await response.text();
+                document.getElementById("response").innerHTML = data;
+                //save data
+            } catch (error) {
+                document.getElementById("response").innerHTML = error.message;
+            }
+        }
+    </script>
+{% endblock %}

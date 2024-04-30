@@ -1,10 +1,10 @@
-hash: 75c9aae5a07c0d0afc8d0324e7ed76da909a400115ba7aaeab8c78b66c994a21
+hash: c3bc5bc01c4f268018cb643027af10bf9c47e9724d8b568b41cb6963a026f1d0
 
 version: - 1
 
-id: 7FkN3UdoBq8thzfYgrYpoaDPmRK59qnCLJkUvXJNN4wW
+id: AKdJi5iNT1Ztp9ik2er77hJC1mD458CCFowShA6ZHK9S
 
-tokenID: 8wPgEHY4MAa6Bn9x1ooYRn3BorS4tDMt2cJc4UC4LqFh
+tokenID: C6FrUQWhBWiBHTvwytSDQjUoMZtm22pTWZjarfzChkyi
 
 {
   "type": 103,
@@ -13,7 +13,7 @@ tokenID: 8wPgEHY4MAa6Bn9x1ooYRn3BorS4tDMt2cJc4UC4LqFh
   "password": "DC3_0U7cCGhGQstieg8kHg",
   "image": "localhost:5000/shop",
   "contractName": "shop",
-  "imageHash": "918c970b4807a3dd602f2d1cdebb5cd7893fc064e3fc5557425727edbec10d4f",
+  "imageHash": "c3bc5bc01c4f268018cb643027af10bf9c47e9724d8b568b41cb6963a026f1d0",
   "params": [],
   "fee": 0,
   "feeAssetId": null
@@ -41,4 +41,17 @@ tokenID: 8wPgEHY4MAa6Bn9x1ooYRn3BorS4tDMt2cJc4UC4LqFh
   "amount": 10000,
   "assetId": "8wPgEHY4MAa6Bn9x1ooYRn3BorS4tDMt2cJc4UC4LqFh",
   "fee": 0
+}
+
+{
+   "type": 3,
+   "version":2,
+   "name": "Asset",
+   "quantity": 100000000000,
+   "description": "Some description",
+   "sender": "3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp",
+   "password": "DC3_0U7cCGhGQstieg8kHg",
+   "decimals": 8,
+   "reissuable": true,
+   "fee": 0
 }

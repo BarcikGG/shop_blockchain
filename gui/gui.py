@@ -6,9 +6,9 @@ import json
 app = Flask(__name__)
 
 BASE_URL = 'http://localhost:'
-ASSETID = '8wPgEHY4MAa6Bn9x1ooYRn3BorS4tDMt2cJc4UC4LqFh'
-CONTRACTID = '7FkN3UdoBq8thzfYgrYpoaDPmRK59qnCLJkUvXJNN4wW'
-VERSION = 3
+ASSETID = 'C6FrUQWhBWiBHTvwytSDQjUoMZtm22pTWZjarfzChkyi'
+CONTRACTID = 'AKdJi5iNT1Ztp9ik2er77hJC1mD458CCFowShA6ZHK9S'
+VERSION = 1
 
 ports = {"3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp": "6862", 
          "3NoXmP2bv4xVajPGPZdzkKXy37dyUro7g7V": "6872",
@@ -18,11 +18,15 @@ SandB = '/transactions/signAndBroadcast/'
 Status = 'http://localhost:6862/contracts/status/'
 GetByKey = 'http://localhost:6862/contracts/'
 Balance = 'http://localhost:6862/assets/balance/'
-BalanceOfContract = 'http://localhost:6862/contracts/asset-balance/7FkN3UdoBq8thzfYgrYpoaDPmRK59qnCLJkUvXJNN4wW/8wPgEHY4MAa6Bn9x1ooYRn3BorS4tDMt2cJc4UC4LqFh'
+BalanceOfContract = f'http://localhost:6862/contracts/asset-balance/{CONTRACTID}/{ASSETID}'
 
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/register')
+def register():
+    return render_template('reg.html')
 
 @app.route('/profile')
 def about():
@@ -34,6 +38,24 @@ def confirm_user():
     acc_type = data['acc_type']
     acc_add = data['acc_add']
     result = confirmUser(acc_type, acc_add)
+    return jsonify(result)
+
+@app.route('/register_user', methods=['POST'])
+def register_user():
+    data = request.json
+    acc_type = data['acc_type']
+    name = data['name']
+    adr = data['adr']
+    password = data['password']
+    region = data['region']
+    phone = data['phone']
+    fio = data['fio']
+
+    if acc_type == 'client':
+        result = registerClient(adr, password, region, phone, fio)
+        print(result)
+    else: result = 'wrong type'
+
     return jsonify(result)
 
 @app.route('/contract_balance', methods=['GET'])
