@@ -78,7 +78,7 @@ def confirmUser(acc_type, acc_add):
         {
            "type": "string",
            "key": "action",
-           "value": "accept_reg"
+           "value": "accept_register"
         },
         {
            "type": "string",

@@ -91,13 +91,13 @@ class ContractHandler:
             action = find_string(self.__call_transaction.params, "action")
             if action == "register": self.__register()
             elif action == "register_operator": self.__register_operator()
-            elif action == "accept_reg": self.__confirm_registration()
+            elif action == "accept_register": self.__confirm_registration()
             elif action == "create_product": self.__create_product()
             elif action == "accept_product": self.__accept_product()
             elif action == "delete": self.__delete()
             elif action == "buy": self.__buy_product()
             elif action == "withdraw": self.__withdraw()
-            else: self.__set_error("Can't find action")
+            else: self.__set_error("Can't find action. Available: register, create_product, delete, buy, withdraw")
         except BaseException as error:
             self.__set_error(error)
 
@@ -158,6 +158,7 @@ class ContractHandler:
             if self.__call_transaction.sender not in self.operators:
                 self.__set_error("You are not operator!")
             if account_key is None: self.__set_error("Accepted account is required")
+            if account_key not in self.waitList: self.__set_error('Cant find this account')
 
             if account_type == "dist":
                 self.dists[account_key] = self.waitList.pop(account_key)
@@ -211,6 +212,7 @@ class ContractHandler:
                             region, "phone": phone, "fio": fio, "public_key": pbk})
                 self.__push_waitList(user, self.__call_transaction.sender)
                 self.__reg_organization(organization_name=name, pbk=pbk, type=type)
+            else: self.__set_error('Wrong type, select: dist, seller, client')
 
             self.__write_data([
                 data_entry_pb2.DataEntry(key="waitList",string_value=json.dumps(self.waitList)),
@@ -308,12 +310,32 @@ class ContractHandler:
             self.__write_data([data_entry_pb2.DataEntry(key="productWait", string_value=json.dumps(self.productWait))])
         except BaseException as error:
                 self.__set_error(str(error))
+
+    def __approve(self):
+        try:
+            self.orders = self.__read_key("orders")
+            id = find_string(self.__call_transaction.params, "order_id")
+            
+            if id not in self.orders: self.__set_error('Cant find this order')
+
+            order_data = json.loads(self.orders[id])
+            order_data['status'] = 'approved'
+
+            self.orders[id] = json.dumps(order_data)
+            self.__write_data([
+                data_entry_pb2.DataEntry(key="orders", string_value=json.dumps(self.orders))
+            ])
+        except BaseException as error:
+                self.__set_error(str(error))
     
     def __withdraw(self):
         try:
             self.orders = self.__read_key("orders")
             id = find_string(self.__call_transaction.params, "order_id")
+            assetID = find_string(self.__call_transaction.params, "asset")
             
+            if id not in self.orders: self.__set_error('cant find order')
+
             order_data = json.loads(self.orders[id])
             if self.__call_transaction.sender_public_key != order_data["seller"]:
                 self.__set_error("You are not a seller")
@@ -327,7 +349,7 @@ class ContractHandler:
             transfer = contract_transfer_out_pb2.ContractTransferOut()
             
             transfer.recipient = recipient
-            transfer.asset_id.value = "5GXaMm4nRsP4JMkMgRitLJfiaf9q8QF5MeLk8g4HZAws"
+            transfer.asset_id.value = assetID
 
             transfer.amount = amount
             request = contract_contract_service_pb2.ExecutionSuccessRequest(tx_id = self.__call_transaction.id, 
@@ -400,7 +422,6 @@ class ContractHandler:
             max = find_int(self.__call_transaction.params, "max")
             min = find_int(self.__call_transaction.params, "min")
             sellers = find_string(self.__call_transaction.params, "sellers")
-            title = find_string(self.__call_transaction.params, "title")
             id = find_string(self.__call_transaction.params, "id")
 
             if self.__call_transaction.sender not in self.operators:
@@ -409,31 +430,23 @@ class ContractHandler:
             if id not in self.productWait:
                 self.__set_error("Can't find product with this id")
 
-            if title is None: self.__set_error("Name can't be empty")
             if max is None: self.__set_error("Max amount can't be empty")
             if min is None: self.__set_error("Min amount key can't be empty")
             if sellers is None: self.__set_error("Sellers key can't be empty")
 
-            current_product = None
-            for prod_id, prod_data_json in self.productWait.items():
-                prod_data = json.loads(prod_data_json)
-                if isinstance(prod_data, dict) and "title" in prod_data and prod_data["title"] == title:
-                    current_product = prod_data
-                    break
+            current_product = json.loads(self.productWait[id])
 
-            if not current_product:
-                self.__set_error("Не удалось найти продукт с таким названием")
-
-            description = current_product.get("description", "")
-            regions = current_product.get("regions", [])
-            added = current_product.get("added", "")
-            price = current_product.get("price", 0)
+            description = current_product["description"]
+            regions = current_product["regions"]
+            added = current_product["added"]
+            title = current_product["title"]
+            price = current_product["price"]
 
             product = Product({"title": title, "description": description, "regions": regions,
                             "max": max, "min": min, "sellers": [sellers], "added": added, "price": price})
             
-            self.productWait.pop(prod_id)
-            self.__push_products(product, prod_id)
+            self.productWait.pop(id)
+            self.__push_products(product, id)
             self.__write_data([
                 data_entry_pb2.DataEntry(key="products",string_value=json.dumps(self.products)),
                 data_entry_pb2.DataEntry(key="productWait",string_value=json.dumps(self.productWait))])
