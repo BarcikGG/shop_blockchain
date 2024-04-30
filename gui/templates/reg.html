@@ -16,6 +16,9 @@
         
         <label for="name">Name:</label>
         <input type="text" id="name" name="name"><br><br>
+
+        <label for="desc">Description:</label>
+        <input type="text" id="desc" name="desc"><br><br>
         
         <label for="region">Region:</label>
         <input type="text" id="region" name="region"><br><br>
@@ -39,6 +42,7 @@
                 const adr = document.getElementById("adr").value;
                 const password = document.getElementById("password").value;
                 const name = document.getElementById("name").value;
+                const desc = document.getElementById("desc").value;
                 const region = document.getElementById("region").value;
                 const phone = document.getElementById("phone").value;
                 const fio = document.getElementById("fio").value;
@@ -47,6 +51,7 @@
                 document.getElementById("acc_type").value = '';
                 document.getElementById("password").value = '';
                 document.getElementById("name").value = ''
+                document.getElementById("desc").value = ''
                 document.getElementById("region").value = ''
                 document.getElementById("phone").value = ''
                 document.getElementById("fio").value = ''
@@ -58,7 +63,7 @@
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({ acc_type: accType, adr: adr, password: password,
-                        name: name, region: region, phone: phone, fio: fio })
+                        name: name, description: desc, region: region, phone: phone, fio: fio })
                 });
 
                 if (!response.ok) {

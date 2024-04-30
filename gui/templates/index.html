@@ -10,6 +10,9 @@
         <button type="button" onclick="getCotractBalance()">refresh</button>
     </div>
 
+    <div id="waitlist" style="margin-top: 2vh;"></div>
+    <button type="button" onclick="getWaitlist()">get waitlist</button>
+
     <form id="myForm" style="margin-top: 5vh;">
         <h2>Accept account from waitlist</h2>
         <label for="acc_type">Account Type:</label>
@@ -60,6 +63,31 @@
                 document.getElementById("contract_balance").innerHTML = data;
             } catch (error) {
                 document.getElementById("contract_balance").innerHTML = error.message;
+            }
+        }
+
+        async function getWaitlist() {
+            try {
+                const response = await fetch("/get_waitlist");
+                if (!response.ok) {
+                    throw new Error("Error: " + response.status);
+                }
+                const data = await response.json();
+                
+                const waitlistContainer = document.getElementById("waitlist");
+                waitlistContainer.innerHTML = '';
+
+                data.keys.forEach((key, index) => {
+                    const waitlistItem = document.createElement('div');
+                    waitlistItem.classList.add('waitlist-item');
+                    waitlistItem.innerHTML = `
+                        <h3>Key: ${key}</h3>
+                        <p style="margin-bottom: 1vh;">Name: ${data.names[index]}</p>
+                    `;
+                    waitlistContainer.appendChild(waitlistItem);
+                });
+            } catch (error) {
+                document.getElementById("waitlist").innerHTML = error.message;
             }
         }
     </script>

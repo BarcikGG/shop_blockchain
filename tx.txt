@@ -30,7 +30,7 @@
 }
 
 
-// reg selelr
+// reg seller
 {
     "contractId": "7FkN3UdoBq8thzfYgrYpoaDPmRK59qnCLJkUvXJNN4wW",
     "fee": 0,

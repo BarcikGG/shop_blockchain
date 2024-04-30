@@ -45,16 +45,14 @@ def register_user():
     data = request.json
     acc_type = data['acc_type']
     name = data['name']
+    description = data['description']
     adr = data['adr']
     password = data['password']
     region = data['region']
     phone = data['phone']
     fio = data['fio']
 
-    if acc_type == 'client':
-        result = registerClient(adr, password, region, phone, fio)
-        print(result)
-    else: result = 'wrong type'
+    result = registerUser(acc_type, adr, password, name, description, region, phone, fio)
 
     return jsonify(result)
 
@@ -62,6 +60,18 @@ def register_user():
 def contract_balance():
     result = getContractBalance()
     return result
+
+@app.route('/get_waitlist', methods=['GET'])
+def get_waitlist():
+    waitlist_dict = printList("waitList")
+    
+    keys = list(waitlist_dict.keys())
+    fio = list()
+
+    for value in waitlist_dict.values():
+        fio.append(json.loads(value)['fio'])
+    
+    return jsonify({'keys': keys, 'names': fio})
 
 def getContractBalance():
     response = requests.get(BalanceOfContract)
@@ -164,7 +174,7 @@ def createProduct(title, desc, price, region):
     print('sending...')
     return checkStatus(response.json()['id'])
 
-def printOrders(list_name):
+def printList(list_name):
     response = requests.get(GetByKey+CONTRACTID+'/'+list_name)
     try:
         return json.loads(response.json()['value'])
@@ -219,7 +229,7 @@ def confirmProduct(prod_id, title, min, max, sellers):
     print('sending...')
     return checkStatus(response.json()['id'])
 
-def registerClient(adr, password, region, phone, fio):
+def registerUser(type, adr, password, name, description, region, phone, fio):
     tx = {
     "contractId": CONTRACTID,
     "fee": 0,
@@ -236,7 +246,17 @@ def registerClient(adr, password, region, phone, fio):
         {
            "type": "string",
            "key": "type",
-           "value": "client"
+           "value": type
+        },
+        {
+           "type": "string",
+           "key": "name",
+           "value": name
+        },
+        {
+           "type": "string",
+           "key": "description",
+           "value": description
         },
         {
            "type": "string",
@@ -259,13 +279,13 @@ def registerClient(adr, password, region, phone, fio):
     "version": 2,
     "contractVersion": VERSION
     }
-    response = requests.post(BASE_URL+ports["3NforeFPihoReVSCc18kriTbwdUamFbifLn"]+SandB, json=tx)
+    response = requests.post(BASE_URL+ports[adr]+SandB, json=tx)
     print(response.status_code)
     print('sending...')
     return checkStatus(response.json()['id'])
 
 def getProductPrice(prod_id):
-    return json.loads(printOrders("products")[prod_id])["price"]
+    return json.loads(printList("products")[prod_id])["price"]
 
 def buyProduct(prod_id, amount):
     money = getProductPrice(prod_id=prod_id) * amount
@@ -315,7 +335,7 @@ def buyProduct(prod_id, amount):
 
 # getProductPrice("74169")
 
-# registerClient("3NforeFPihoReVSCc18kriTbwdUamFbifLn", "777", "Moscow", "839849303", "SPS")
+# registerUser("3NforeFPihoReVSCc18kriTbwdUamFbifLn", "777", "Moscow", "839849303", "SPS")
 # confirmUser("client", "3NforeFPihoReVSCc18kriTbwdUamFbifLn")
 # buyProduct("74169", 5)
 
