@@ -108,6 +108,17 @@ def add_product():
     result = createProduct(adr, password, name, description, price, region)
     return jsonify(result)
 
+@app.route('/buy_product', methods=['POST'])
+def buy_product():
+    data = request.json
+    adr = session.get('adr')
+    password = session.get('password')
+    product_id = data['product_id']
+    amount = int(data['amount'])
+    
+    result = buyProduct(adr, password, product_id, amount)
+    return jsonify(result)
+
 @app.route('/contract_balance', methods=['GET'])
 def contract_balance():
     result = getContractBalance()
@@ -146,12 +157,16 @@ def get_products():
     keys = list(products_dict.keys())
     titles = list()
     prices = list()
+    min = list()
+    max = list()
 
     for value in products_dict.values():
         titles.append(json.loads(value)['title'])
         prices.append(json.loads(value)['price'])
+        min.append(json.loads(value)['min'])
+        max.append(json.loads(value)['max'])
     
-    return jsonify({'keys': keys, 'names': titles, 'prices': prices})
+    return jsonify({'keys': keys, 'names': titles, 'prices': prices, 'min': min, 'max': max})
 
 def getContractBalance():
     response = requests.get(BalanceOfContract)

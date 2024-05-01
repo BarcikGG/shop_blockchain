@@ -6,21 +6,34 @@
     <button type="button" onclick="getWaitProducts()">get wait products</button>
     <button type="button" onclick="getProducts()">get products</button>
 
-    <form id="myForm" style="margin-top: 5vh;">
-        <h2>Accept product from waitlist</h2>
-        <label for="prod">Product id:</label>
-        <input type="text" id="prod" name="prod"><br><br>
+    <div class="forms" style="display: flex; gap: 5vw; align-items: flex-start;">
+        <form id="myForm" style="margin-top: 5vh; width: 50%; display: flex; flex-direction: column; justify-content: center;">
+            <h2>Accept product from waitlist</h2>
+            <label for="prod">Product id:</label>
+            <input type="text" id="prod" name="prod"><br><br>
+    
+            <label for="min">Min:</label>
+            <input type="number" id="min" name="min"><br><br>
+    
+            <label for="max">Max:</label>
+            <input type="number" id="max" name="max"><br><br>
+    
+            <label for="seller">Seller:</label>
+            <input type="text" id="seller" name="seller"><br><br>
+            <button type="button" onclick="confirmProduct()">accept</button>
+        </form>
 
-        <label for="min">Min:</label>
-        <input type="number" id="min" name="min"><br><br>
-
-        <label for="max">Max:</label>
-        <input type="number" id="max" name="max"><br><br>
-
-        <label for="seller">Seller:</label>
-        <input type="text" id="seller" name="seller"><br><br>
-        <button type="button" onclick="confirmProduct()">submit</button>
-    </form>
+        <form id="myForm" style="margin-top: 5vh; width: 50%; display: flex; flex-direction: column; justify-content: center;">
+            <h2>Buy product</h2>
+            <label for="product_id">Product id:</label>
+            <input type="text" id="product_id" name="product_id"><br><br>
+    
+            <label for="amount">Amount:</label>
+            <input type="number" id="amount" name="amount"><br><br>
+    
+            <button type="button" onclick="buyProduct()">buy</button>
+        </form>
+    </div>
 
     <div id="response"></div>
 
@@ -100,12 +113,38 @@
                     waitlistItem.innerHTML = `
                         <h3>ID: ${key}</h3>
                         <p>Name: ${data.names[index]}</p>
-                        <p style="margin-bottom: 2vh;">Price: ${data.prices[index]}</p>
+                        <p>Min: ${data.min[index]}</p>
+                        <p>Max: ${data.max[index]}</p>
+                        <h3 style="margin-bottom: 2vh;">Price: ${data.prices[index]}</h3>
                     `;
                     waitlistContainer.appendChild(waitlistItem);
                 });
             } catch (error) {
                 document.getElementById("products").innerHTML = error.message;
+            }
+        }
+
+        async function buyProduct() {
+            try {
+                const product_id = document.getElementById('product_id').value;
+                const amount = document.getElementById('amount').value;
+
+                document.getElementById('product_id').value = '';
+                document.getElementById('amount').value = '';
+                document.getElementById("response").innerHTML = 'sending...';
+
+                const response = await fetch('/buy_product', {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({'product_id': product_id, 'amount': amount})
+                });
+
+                const data = await response.text()
+                document.getElementById('response').innerHTML = data
+            } catch(error) {
+                document.getElementById('response').innerHTML = error.message;
             }
         }
     </script>
