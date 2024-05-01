@@ -1,6 +1,6 @@
 ASSETID = 'C6FrUQWhBWiBHTvwytSDQjUoMZtm22pTWZjarfzChkyi'
 CONTRACTID = 'AKdJi5iNT1Ztp9ik2er77hJC1mD458CCFowShA6ZHK9S'
-VERSION = 1
+VERSION = 3
 
 def confirm_account_tx(acc_type, acc_add):
     tx = {

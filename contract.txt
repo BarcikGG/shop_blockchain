@@ -25,8 +25,8 @@ tokenID: C6FrUQWhBWiBHTvwytSDQjUoMZtm22pTWZjarfzChkyi
   "sender" : "3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp",
   "password": "DC3_0U7cCGhGQstieg8kHg",
   "fee" : 0,
-  "contractId" : "7FkN3UdoBq8thzfYgrYpoaDPmRK59qnCLJkUvXJNN4wW",
-  "imageHash" : "75c9aae5a07c0d0afc8d0324e7ed76da909a400115ba7aaeab8c78b66c994a21",
+  "contractId" : "AKdJi5iNT1Ztp9ik2er77hJC1mD458CCFowShA6ZHK9S",
+  "imageHash" : "e90d59382acd47febf17c8ffffb8910d2a601e52c56dce87d3f486d036698851",
   "type" : 107,
   "version" : 2
 }

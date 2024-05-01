@@ -2,7 +2,12 @@
 
 {% block title %}Главная{% endblock %}
 {% block content %}
-    <h1>Your profile</h1>
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <h2 style="font-weight: 500;">Balance: </h2>
+        <h2 id="balance"></h2>
+    </div>
+    <button type="button" onclick="getBalance()">refresh</button>
+
     <h2>Address: {{adr}}</h2>
     <h2>FIO: {{fio}}</h2>
     <form id="myForm" style="margin-top: 5vh; width: 50%; display: flex; flex-direction: column; justify-content: center;">
@@ -27,6 +32,19 @@
     </form>
 
     <script>
+        async function getBalance() {
+            try {
+                const response = await fetch("/user_balance");
+                if (!response.ok) {
+                    throw new Error("Error: " + response.status);
+                }
+                const data = await response.text();
+                document.getElementById("balance").innerHTML = data;
+            } catch (error) {
+                document.getElementById("balance").innerHTML = error.message;
+            }
+        }
+
         async function addProduct() {
             try {
                 const name = document.getElementById("name").value;

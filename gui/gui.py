@@ -124,6 +124,11 @@ def contract_balance():
     result = getContractBalance()
     return result
 
+@app.route('/user_balance', methods=['GET'])
+def user_balance():
+    result = getUserBalance()
+    return result
+
 @app.route('/get_waitlist', methods=['GET'])
 def get_waitlist():
     waitlist_dict = printList("waitList")
@@ -171,6 +176,11 @@ def get_products():
 def getContractBalance():
     response = requests.get(BalanceOfContract)
     return response.json()['balance']
+
+def getUserBalance():
+    adr = session.get('adr')
+    response = requests.get(Balance + adr + "/" + ASSETID)
+    return str(response.json()['balance'])
 
 def checkStatus(transaction_id):
     print(transaction_id)
@@ -224,9 +234,10 @@ def getProductPrice(prod_id):
     return json.loads(printList("products")[prod_id])["price"]
 
 def buyProduct(adr, password, prod_id, amount):
-    money = getProductPrice(prod_id=prod_id) * amount
+    money = getProductPrice(prod_id) * amount
     tx = buy_product_tx(adr, password, amount, prod_id, money)
     response = requests.post(BASE_URL+ports[adr]+SandB, json=tx)
+    print(response.json())
     return checkStatus(response.json()['id'])
 
 if __name__ == '__main__':

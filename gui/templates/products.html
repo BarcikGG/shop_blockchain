@@ -133,13 +133,17 @@
                 document.getElementById('amount').value = '';
                 document.getElementById("response").innerHTML = 'sending...';
 
-                const response = await fetch('/buy_product', {
+                const response = await fetch("/buy_product", {
                     method: 'POST',
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({'product_id': product_id, 'amount': amount})
+                    body: JSON.stringify({"product_id": product_id, "amount": amount})
                 });
+
+                if (!response.ok) {
+                    throw new Error("Error (not enough money): " + response.status);
+                }
 
                 const data = await response.text()
                 document.getElementById('response').innerHTML = data
