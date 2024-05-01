@@ -1,4 +1,5 @@
 import requests
+from transactions.tx import *
 from flask import Flask, jsonify, render_template, request
 import time
 import json
@@ -97,79 +98,16 @@ def checkStatus(transaction_id):
 
     return 'cant send request'
 
-
 def confirmUser(acc_type, acc_add):
-    tx = {
-    "contractId": CONTRACTID,
-    "fee": 0,
-    "sender": "3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp",
-    "password": "DC3_0U7cCGhGQstieg8kHg",
-    "type": 104,
-    "params":
-    [
-        {
-           "type": "string",
-           "key": "action",
-           "value": "accept_register"
-        },
-        {
-           "type": "string",
-           "key": "type",
-           "value": acc_type
-        },
-        {
-           "type": "string",
-           "key": "account",
-           "value": acc_add
-        }
-    ],
-    "version": 2,
-    "contractVersion": VERSION
-    }
+    tx = confirm_account_tx(acc_type, acc_add)
     response = requests.post(BASE_URL+ports["3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp"]+SandB, json=tx)
     print(response.status_code)
     print('sending...')
     return checkStatus(response.json()['id'])
 
-def createProduct(title, desc, price, region):
-    tx = {
-    "contractId": CONTRACTID,
-    "fee": 0,
-    "sender": "3NoXmP2bv4xVajPGPZdzkKXy37dyUro7g7V",
-    "password": "TSFu-6QrpWsIIApnDJdmXg",
-    "type": 104,
-    "params":
-    [
-        {
-           "type": "string",
-           "key": "action",
-           "value": "create_product"
-        },
-        {
-           "type": "string",
-           "key": "title",
-           "value": title
-        },
-        {
-           "type": "string",
-           "key": "description",
-           "value": desc
-        },
-        {
-           "type": "string",
-           "key": "regions",
-           "value": region
-        },
-        {
-           "type": "integer",
-           "key": "price",
-           "value": price
-        }
-    ],
-    "version": 2,
-    "contractVersion": VERSION
-    }
-    response = requests.post(BASE_URL+ports["3NoXmP2bv4xVajPGPZdzkKXy37dyUro7g7V"]+SandB, json=tx)
+def createProduct(adr, password, title, desc, price, region):
+    tx = create_product_tx(adr, password, title, desc, region, price)
+    response = requests.post(BASE_URL+ports[adr]+SandB, json=tx)
     print(response.status_code)
     print('sending...')
     return checkStatus(response.json()['id'])
@@ -182,103 +120,14 @@ def printList(list_name):
         return response.json()['value']
     
 def confirmProduct(prod_id, title, min, max, sellers):
-    tx = {
-    "contractId": CONTRACTID,
-    "fee": 0,
-    "sender": "3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp",
-    "password": "DC3_0U7cCGhGQstieg8kHg",
-    "type": 104,
-    "params":
-    [
-        {
-           "type": "string",
-           "key": "action",
-           "value": "accept_product"
-        },
-        {
-           "type": "integer",
-           "key": "max",
-           "value": max
-        },
-        {
-           "type": "integer",
-           "key": "min",
-           "value": min
-        },
-        {
-           "type": "string",
-           "key": "title",
-           "value": title
-        },
-        {
-         "type": "string",
-           "key": "id",
-           "value": prod_id
-        },
-        {
-           "type": "string",
-           "key": "sellers",
-           "value": sellers
-        }
-    ],
-    "version": 2,
-    "contractVersion": VERSION
-    }
+    tx = confirm_product_tx(max, min, title, prod_id, sellers)
     response = requests.post(BASE_URL+ports["3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp"]+SandB, json=tx)
     print(response.status_code)
     print('sending...')
     return checkStatus(response.json()['id'])
 
 def registerUser(type, adr, password, name, description, region, phone, fio):
-    tx = {
-    "contractId": CONTRACTID,
-    "fee": 0,
-    "sender": adr,
-    "password": password,
-    "type": 104,
-    "params":
-    [
-        {
-           "type": "string",
-           "key": "action",
-           "value": "register"
-        },
-        {
-           "type": "string",
-           "key": "type",
-           "value": type
-        },
-        {
-           "type": "string",
-           "key": "name",
-           "value": name
-        },
-        {
-           "type": "string",
-           "key": "description",
-           "value": description
-        },
-        {
-           "type": "string",
-           "key": "region",
-           "value": region
-        },
-        {
-           "type": "string",
-           "key": "phone",
-           "value": phone
-
-        },
-        {
-           "type": "string",
-           "key": "fio",
-           "value": fio
-
-        }
-    ],
-    "version": 2,
-    "contractVersion": VERSION
-    }
+    tx = register_user_tx(adr, password, type, name, description, region, phone, fio)
     response = requests.post(BASE_URL+ports[adr]+SandB, json=tx)
     print(response.status_code)
     print('sending...')
@@ -287,43 +136,10 @@ def registerUser(type, adr, password, name, description, region, phone, fio):
 def getProductPrice(prod_id):
     return json.loads(printList("products")[prod_id])["price"]
 
-def buyProduct(prod_id, amount):
+def buyProduct(adr, password, prod_id, amount):
     money = getProductPrice(prod_id=prod_id) * amount
-
-    tx = {
-    "contractId": CONTRACTID,
-    "fee": 0,
-    "sender": "3NforeFPihoReVSCc18kriTbwdUamFbifLn",
-    "password": "777",
-    "type": 104,
-    "params":
-    [
-        {
-           "type": "string",
-           "key": "action",
-           "value": "buy"
-        },
-        {
-           "type": "integer",
-           "key": "amount",
-           "value": amount
-        },
-        {
-           "type": "string",
-           "key": "id",
-           "value": prod_id
-        }
-    ],
-    "payments": [
-      {
-        "assetId": ASSETID,
-        "amount": money
-      }
-    ],
-    "version": 5,
-    "contractVersion": VERSION
-    }
-    response = requests.post(BASE_URL+ports["3NforeFPihoReVSCc18kriTbwdUamFbifLn"]+SandB, json=tx)
+    tx = buy_product_tx(adr, password, amount, prod_id, money)
+    response = requests.post(BASE_URL+ports[adr]+SandB, json=tx)
     print(response.status_code)
     print('sending...')
     return checkStatus(response.json()['id'])
