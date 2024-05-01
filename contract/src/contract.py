@@ -152,6 +152,9 @@ class ContractHandler:
         try:
             self.waitList = self.__read_key("waitList")
             self.operators = self.__read_key("operators")
+            self.clients = self.__read_key("clients")
+            self.sellers = self.__read_key("sellers")
+            self.dists = self.__read_key("dists")
             account_key = find_string(self.__call_transaction.params, "account")
             account_type = find_string(self.__call_transaction.params, "type")
             

@@ -3,4 +3,60 @@
 {% block title %}Главная{% endblock %}
 {% block content %}
     <h1>Your profile</h1>
+    <h2>Address: {{adr}}</h2>
+    <h2>FIO: {{fio}}</h2>
+    <form id="myForm" style="margin-top: 5vh; width: 50%; display: flex; flex-direction: column; justify-content: center;">
+        <h2 style="text-align: center; margin-bottom: 2vh;">Add product</h2>                
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name"><br><br>
+
+        <label for="desc">Description:</label>
+        <input type="text" id="desc" name="desc"><br><br>
+        
+        <label for="region">Region:</label>
+        <input type="text" id="region" name="region"><br><br>
+
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price"><br><br>
+
+        <button type="button" 
+            style="height: 50px; background-color: #071bf3; color: #fff; border-radius: 5px;"
+            onclick="addProduct()">add product</button>
+
+        <div id="response"></div>
+    </form>
+
+    <script>
+        async function addProduct() {
+            try {
+                const name = document.getElementById("name").value;
+                const desc = document.getElementById("desc").value;
+                const region = document.getElementById("region").value;
+                const price = document.getElementById("price").value;
+
+                document.getElementById("name").value = ''
+                document.getElementById("desc").value = ''
+                document.getElementById("region").value = ''
+                document.getElementById("price").value = ''
+                document.getElementById("response").innerHTML = 'sending...';
+
+                const response = await fetch("/add_product", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({name: name, description: desc, region: region, price: price})
+                });
+
+                if (!response.ok) {
+                    throw new Error("Error: " + response.status);
+                }
+
+                const data = await response.text();
+                document.getElementById("response").innerHTML = data;
+            } catch (error) {
+                document.getElementById("response").innerHTML = error.message;
+            }
+        }
+    </script>
 {% endblock %}

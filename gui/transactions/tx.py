@@ -1,4 +1,6 @@
-from gui import CONTRACTID, VERSION, ASSETID
+ASSETID = 'C6FrUQWhBWiBHTvwytSDQjUoMZtm22pTWZjarfzChkyi'
+CONTRACTID = 'AKdJi5iNT1Ztp9ik2er77hJC1mD458CCFowShA6ZHK9S'
+VERSION = 1
 
 def confirm_account_tx(acc_type, acc_add):
     tx = {
@@ -157,12 +159,12 @@ def buy_product_tx(adr, password, amount, prod_id, money):
     }
     return tx
 
-def confirm_product_tx(max, min, title, prod_id, sellers):
+def confirm_product_tx(adr, password, max, min, prod_id, sellers):
     tx = {
     "contractId": CONTRACTID,
     "fee": 0,
-    "sender": "3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp",
-    "password": "DC3_0U7cCGhGQstieg8kHg",
+    "sender": adr,
+    "password": password,
     "type": 104,
     "params":
     [
@@ -182,11 +184,6 @@ def confirm_product_tx(max, min, title, prod_id, sellers):
            "value": min
         },
         {
-           "type": "string",
-           "key": "title",
-           "value": title
-        },
-        {
          "type": "string",
            "key": "id",
            "value": prod_id
@@ -201,5 +198,4 @@ def confirm_product_tx(max, min, title, prod_id, sellers):
     "contractVersion": VERSION
     }
     return tx
-
 

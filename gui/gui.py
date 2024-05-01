@@ -1,15 +1,13 @@
 import requests
 from transactions.tx import *
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, session
 import time
 import json
 
 app = Flask(__name__)
+app.secret_key = 'secret_key'
 
 BASE_URL = 'http://localhost:'
-ASSETID = 'C6FrUQWhBWiBHTvwytSDQjUoMZtm22pTWZjarfzChkyi'
-CONTRACTID = 'AKdJi5iNT1Ztp9ik2er77hJC1mD458CCFowShA6ZHK9S'
-VERSION = 1
 
 ports = {"3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp": "6862", 
          "3NoXmP2bv4xVajPGPZdzkKXy37dyUro7g7V": "6872",
@@ -30,8 +28,19 @@ def register():
     return render_template('reg.html')
 
 @app.route('/profile')
-def about():
-    return render_template('profile.html')
+def profile():
+    adr = session.get('adr')
+    fio = session.get('fio')
+    
+    return render_template('profile.html', adr=adr, fio=fio)
+
+@app.route('/products')
+def products():
+    return render_template('products.html')
+
+@app.route('/login')
+def login():
+    return render_template('login.html')
 
 @app.route('/confirm_user', methods=['POST'])
 def confirm_user():
@@ -39,6 +48,20 @@ def confirm_user():
     acc_type = data['acc_type']
     acc_add = data['acc_add']
     result = confirmUser(acc_type, acc_add)
+    return jsonify(result)
+
+@app.route('/confirm_product', methods=['POST'])
+def confirm_product():
+    data = request.json
+    prod = data['prod']
+    min = int(data['min'])
+    max = int(data['max'])
+    seller = data['seller']
+
+    adr = session.get('adr')
+    password = session.get('password')
+
+    result = confirmProduct(adr, password, prod, min, max, seller)
     return jsonify(result)
 
 @app.route('/register_user', methods=['POST'])
@@ -55,6 +78,34 @@ def register_user():
 
     result = registerUser(acc_type, adr, password, name, description, region, phone, fio)
 
+    return jsonify(result)
+
+@app.route('/login_user', methods=['POST'])
+def login_user():
+    data = request.json
+    adr = data['adr']
+    password = data['password']
+    type = data['type']
+
+    session['adr'] = adr
+    session['password'] = password
+
+    result = json.loads(printList(type+"s")[adr])["fio"]
+    session['fio'] = str(result)
+
+    return jsonify(result)
+
+@app.route('/add_product', methods=['POST'])
+def add_product():
+    data = request.json
+    name = data['name']
+    description = data['description']
+    adr = session.get('adr')
+    password = session.get('password')
+    region = data['region']
+    price = int(data['price'])
+
+    result = createProduct(adr, password, name, description, price, region)
     return jsonify(result)
 
 @app.route('/contract_balance', methods=['GET'])
@@ -74,6 +125,34 @@ def get_waitlist():
     
     return jsonify({'keys': keys, 'names': fio})
 
+@app.route('/get_wait_products', methods=['GET'])
+def get_waitproducts():
+    products_dict = printList("productWait")
+    
+    keys = list(products_dict.keys())
+    titles = list()
+    prices = list()
+
+    for value in products_dict.values():
+        titles.append(json.loads(value)['title'])
+        prices.append(json.loads(value)['price'])
+    
+    return jsonify({'keys': keys, 'names': titles, 'prices': prices})
+
+@app.route('/get_products', methods=['GET'])
+def get_products():
+    products_dict = printList("products")
+    
+    keys = list(products_dict.keys())
+    titles = list()
+    prices = list()
+
+    for value in products_dict.values():
+        titles.append(json.loads(value)['title'])
+        prices.append(json.loads(value)['price'])
+    
+    return jsonify({'keys': keys, 'names': titles, 'prices': prices})
+
 def getContractBalance():
     response = requests.get(BalanceOfContract)
     return response.json()['balance']
@@ -83,6 +162,7 @@ def checkStatus(transaction_id):
     time.sleep(5)
     iteration = 0
     response = requests.get(Status+transaction_id)
+    print(transaction_id)
 
     while True:
         iteration+= 1
@@ -101,15 +181,11 @@ def checkStatus(transaction_id):
 def confirmUser(acc_type, acc_add):
     tx = confirm_account_tx(acc_type, acc_add)
     response = requests.post(BASE_URL+ports["3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp"]+SandB, json=tx)
-    print(response.status_code)
-    print('sending...')
     return checkStatus(response.json()['id'])
 
 def createProduct(adr, password, title, desc, price, region):
     tx = create_product_tx(adr, password, title, desc, region, price)
     response = requests.post(BASE_URL+ports[adr]+SandB, json=tx)
-    print(response.status_code)
-    print('sending...')
     return checkStatus(response.json()['id'])
 
 def printList(list_name):
@@ -119,18 +195,14 @@ def printList(list_name):
     except: 
         return response.json()['value']
     
-def confirmProduct(prod_id, title, min, max, sellers):
-    tx = confirm_product_tx(max, min, title, prod_id, sellers)
-    response = requests.post(BASE_URL+ports["3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp"]+SandB, json=tx)
-    print(response.status_code)
-    print('sending...')
+def confirmProduct(adr, password, prod_id, min, max, sellers):
+    tx = confirm_product_tx(adr, password, max, min, prod_id, sellers)
+    response = requests.post(BASE_URL+ports[adr]+SandB, json=tx)
     return checkStatus(response.json()['id'])
 
 def registerUser(type, adr, password, name, description, region, phone, fio):
     tx = register_user_tx(adr, password, type, name, description, region, phone, fio)
     response = requests.post(BASE_URL+ports[adr]+SandB, json=tx)
-    print(response.status_code)
-    print('sending...')
     return checkStatus(response.json()['id'])
 
 def getProductPrice(prod_id):
@@ -140,20 +212,7 @@ def buyProduct(adr, password, prod_id, amount):
     money = getProductPrice(prod_id=prod_id) * amount
     tx = buy_product_tx(adr, password, amount, prod_id, money)
     response = requests.post(BASE_URL+ports[adr]+SandB, json=tx)
-    print(response.status_code)
-    print('sending...')
     return checkStatus(response.json()['id'])
-
-# print(confirmUser('dist', '3NtW4TTNN8Cvq9WkSHGgrRHfA314vuzrY5z'))
-# print(createProduct("tea", "best price", 100, "Moscow"))
-# print(printOrders("productWait"))
-# confirmProduct("74169", "tea", 2, 200, "3NtW4TTNN8Cvq9WkSHGgrRHfA314vuzrY5z")
-
-# getProductPrice("74169")
-
-# registerUser("3NforeFPihoReVSCc18kriTbwdUamFbifLn", "777", "Moscow", "839849303", "SPS")
-# confirmUser("client", "3NforeFPihoReVSCc18kriTbwdUamFbifLn")
-# buyProduct("74169", 5)
 
 if __name__ == '__main__':
     app.run(debug=True)

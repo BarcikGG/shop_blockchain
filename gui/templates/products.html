@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}Товары{% endblock %}
+{% block content %}
+    <div id="products" style="margin-top: 2vh;"></div>
+    <button type="button" onclick="getWaitProducts()">get wait products</button>
+    <button type="button" onclick="getProducts()">get products</button>
+
+    <form id="myForm" style="margin-top: 5vh;">
+        <h2>Accept product from waitlist</h2>
+        <label for="prod">Product id:</label>
+        <input type="text" id="prod" name="prod"><br><br>
+
+        <label for="min">Min:</label>
+        <input type="number" id="min" name="min"><br><br>
+
+        <label for="max">Max:</label>
+        <input type="number" id="max" name="max"><br><br>
+
+        <label for="seller">Seller:</label>
+        <input type="text" id="seller" name="seller"><br><br>
+        <button type="button" onclick="confirmProduct()">submit</button>
+    </form>
+
+    <div id="response"></div>
+
+    <script>
+        async function confirmProduct() {
+            try {
+                const prod = document.getElementById("prod").value;
+                const min = document.getElementById("min").value;
+                const max = document.getElementById("max").value;
+                const seller = document.getElementById("seller").value;
+
+                document.getElementById("prod").value = '';
+                document.getElementById("min").value = '';
+                document.getElementById("max").value = '';
+                document.getElementById("seller").value = '';
+                document.getElementById("response").innerHTML = 'sending...';
+
+                const response = await fetch("/confirm_product", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ prod: prod, min: min, max: max, seller: seller })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Error: " + response.status);
+                }
+
+                const data = await response.text();
+                document.getElementById("response").innerHTML = data;
+            } catch (error) {
+                document.getElementById("response").innerHTML = error.message;
+            }
+        }
+
+        async function getWaitProducts() {
+            try {
+                const response = await fetch("/get_wait_products");
+                if (!response.ok) {
+                    throw new Error("Error: " + response.status);
+                }
+                const data = await response.json();
+                
+                const waitlistContainer = document.getElementById("products");
+                waitlistContainer.innerHTML = '';
+
+                data.keys.forEach((key, index) => {
+                    const waitlistItem = document.createElement('div');
+                    waitlistItem.classList.add('products-item');
+                    waitlistItem.innerHTML = `
+                        <h3>ID: ${key}</h3>
+                        <p>Name: ${data.names[index]}</p>
+                        <p style="margin-bottom: 2vh;">Price: ${data.prices[index]}</p>
+                    `;
+                    waitlistContainer.appendChild(waitlistItem);
+                });
+            } catch (error) {
+                document.getElementById("products").innerHTML = error.message;
+            }
+        }
+
+        async function getProducts() {
+            try {
+                const response = await fetch("/get_products");
+                if (!response.ok) {
+                    throw new Error("Error: " + response.status);
+                }
+                const data = await response.json();
+                
+                const waitlistContainer = document.getElementById("products");
+                waitlistContainer.innerHTML = '';
+
+                data.keys.forEach((key, index) => {
+                    const waitlistItem = document.createElement('div');
+                    waitlistItem.classList.add('products-item');
+                    waitlistItem.innerHTML = `
+                        <h3>ID: ${key}</h3>
+                        <p>Name: ${data.names[index]}</p>
+                        <p style="margin-bottom: 2vh;">Price: ${data.prices[index]}</p>
+                    `;
+                    waitlistContainer.appendChild(waitlistItem);
+                });
+            } catch (error) {
+                document.getElementById("products").innerHTML = error.message;
+            }
+        }
+    </script>
+{% endblock %}

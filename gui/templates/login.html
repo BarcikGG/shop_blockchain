@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Вход{% endblock %}
+{% block content %}
+<div style="display: flex; justify-content: center;">
+    <form id="myForm" style="margin-top: 5vh; width: 50%; display: flex; flex-direction: column; justify-content: center;">
+        <h2 style="text-align: center; margin-bottom: 2vh;">Login</h2>        
+        <label for="type">Type:</label>
+        <input type="text" id="type" name="type"><br><br>
+        
+        <label for="adr">Address:</label>
+        <input type="text" id="adr" name="adr"><br><br>
+        
+        <label for="password">Password:</label>
+        <input type="text" id="password" name="password"><br><br>
+        <button type="button" 
+            style="height: 50px; background-color: #071bf3; color: #fff; border-radius: 5px;"
+            onclick="login()">login</button>
+
+        <div id="response"></div>
+    </form>
+</div>
+    <script>
+        async function login() {
+            try {
+                const adr = document.getElementById("adr").value;
+                const password = document.getElementById("password").value;
+                const type = document.getElementById("type").value;
+
+                document.getElementById("adr").value = '';
+                document.getElementById("password").value = '';
+                document.getElementById("type").value = '';
+                document.getElementById("response").innerHTML = 'sending...';
+
+                const response = await fetch("/login_user", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ type: type, adr: adr, password: password })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Error: " + response.status);
+                }
+
+                const data = await response.text();
+                if (data != 'Error: 500') {
+                    document.getElementById("response").innerHTML = 'Success!';
+                }
+            } catch (error) {
+                document.getElementById("response").innerHTML = error.message + "\nWrong type or data.\nTypes: seller, client, dist";
+            }
+        }
+    </script>
+{% endblock %}
