@@ -19,23 +19,25 @@
     <div id="waitlist" style="margin-top: 2vh;"></div>
     <button type="button" onclick="getWaitlist()">get waitlist</button>
 
-    <form id="myForm" style="margin-top: 5vh;">
-        <h2>Accept account from waitlist</h2>
-        <label for="acc_type">Account Type:</label>
-        <input type="text" id="acc_type" name="acc_type"><br><br>
-        <label for="acc_add">Account Address:</label>
-        <input type="text" id="acc_add" name="acc_add"><br><br>
-        <button type="button" onclick="confirmUser()">Submit</button>
-    </form>
-
-    <form id="myForm" style="margin-top: 5vh;">
-        <h2>Delete</h2>
-        <label for="key">Key:</label>
-        <input type="text" id="key" name="key"><br><br>
-        <label for="value">Value:</label>
-        <input type="text" id="value" name="value"><br><br>
-        <button type="button" onclick="deleteValue()">Delete</button>
-    </form>
+    <div class="div" style="display: flex; gap: 15px;">
+        <form id="myForm" style="margin-top: 5vh;">
+            <h2>Accept account from waitlist</h2>
+            <label for="acc_type">Account Type:</label>
+            <input type="text" id="acc_type" name="acc_type"><br><br>
+            <label for="acc_add">Account Address:</label>
+            <input type="text" id="acc_add" name="acc_add"><br><br>
+            <button type="button" onclick="confirmUser()">Submit</button>
+        </form>
+    
+        <form id="myForm" style="margin-top: 5vh;">
+            <h2>Delete</h2>
+            <label for="key">List name:</label>
+            <input type="text" id="key" name="key"><br><br>
+            <label for="value">Key:</label>
+            <input type="text" id="value" name="value"><br><br>
+            <button type="button" onclick="deleteValue()">Delete</button>
+        </form>
+    </div>
 
     <div id="response"></div>
     {% endif %}

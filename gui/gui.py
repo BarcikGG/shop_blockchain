@@ -102,7 +102,6 @@ def get_values():
     list_name = data['list']
 
     list_dict = printList(list_name)
-    print(list_dict)
     keys = list(list_dict.keys())
     values = list()
 

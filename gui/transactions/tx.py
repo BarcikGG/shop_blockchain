@@ -175,12 +175,12 @@ def delete_tx(adr, password, key, value):
         },
         {
            "type": "string",
-           "key": "key",
+           "key": "type",
            "value": key
         },
         {
            "type": "string",
-           "key": "value",
+           "key": "key",
            "value": value
         }
     ],
