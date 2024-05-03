@@ -10,12 +10,29 @@ body {
 
 a {
     text-decoration: none;
+    color: #071bf3;
 }
 
 input {
     height: 30px;
     margin-top: 5px;
     margin-bottom: 2vh;
+}
+
+button {
+    height: 50px; 
+    background-color: #071bf3; 
+    color: #fff; 
+    border-radius: 5px;
+    padding-inline: 10px;
+}
+
+#myForm {
+    margin-top: 5vh; 
+    width: 50%; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center;
 }
 
 #response {

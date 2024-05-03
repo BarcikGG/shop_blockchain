@@ -1,6 +1,6 @@
 ASSETID = 'C6FrUQWhBWiBHTvwytSDQjUoMZtm22pTWZjarfzChkyi'
 CONTRACTID = 'AKdJi5iNT1Ztp9ik2er77hJC1mD458CCFowShA6ZHK9S'
-VERSION = 3
+VERSION = 4
 
 def confirm_account_tx(acc_type, acc_add):
     tx = {
@@ -155,6 +155,36 @@ def buy_product_tx(adr, password, amount, prod_id, money):
       }
     ],
     "version": 5,
+    "contractVersion": VERSION
+    }
+    return tx
+
+def delete_tx(adr, password, key, value):
+    tx = {
+    "contractId": CONTRACTID,
+    "fee": 0,
+    "sender": adr,
+    "password": password,
+    "type": 104,
+    "params":
+    [
+        {
+           "type": "string",
+           "key": "action",
+           "value": "delete"
+        },
+        {
+           "type": "string",
+           "key": "key",
+           "value": key
+        },
+        {
+           "type": "string",
+           "key": "value",
+           "value": value
+        }
+    ],
+    "version": 2,
     "contractVersion": VERSION
     }
     return tx

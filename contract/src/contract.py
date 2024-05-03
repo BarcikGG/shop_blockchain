@@ -184,6 +184,7 @@ class ContractHandler:
     def __register(self):
         try:
             self.waitList = self.__read_key("waitList")
+            self.organizations = self.__read_key("organizations")
             type = find_string(self.__call_transaction.params, "type")
             name = find_string(self.__call_transaction.params, "name")
             description = find_string(self.__call_transaction.params, "description")

@@ -1,12 +1,28 @@
-<header style="height: 70px; width: 100%; display: flex; align-items: center; justify-content: space-between;">
-    <h1>Blockchain shop</h1>
+<header style="height: 70px; width: 100%; display: flex; 
+    align-items: center; justify-content: space-between;
+    border-bottom: 1px solid gray; margin-bottom: 10px;">
+    <h1><a href="/" style="color: black;">Blockchain shop</a></h1>
     <nav>
         <ul style="display: flex; gap: 30px;">
             <a href="/">Главная</a>
             <a href="/profile">Профиль</a>
             <a href="/products">Продукты</a>
-            <a href="/register">Регистрация</a>
-            <a href="/login">Вход</a>
+            {% if session['type'] %}
+                <a href="/login" onclick="logout()">Выход</a>
+            {% else %}
+                <a href="/register">Регистрация</a>
+                <a href="/login">Вход</a>
+            {% endif %}
         </ul>
     </nav>
 </header>
+
+<script>
+    async function logout() {
+        const response = await fetch('/user_logout')
+        
+        if (response.ok) {
+            window.location.href = '/login';
+        }
+    }
+</script>

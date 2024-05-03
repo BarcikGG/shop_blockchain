@@ -9,7 +9,13 @@
         </div>
         <button type="button" onclick="getCotractBalance()">refresh</button>
     </div>
+    <div id="list" style="margin-top: 2vh;"></div>
+    <div style="display: flex;">
+        <input type="text" id="list_name" placeholder="list name"><br><br>
+        <button type="button" onclick="getlist()">get list</button>
+    </div>
 
+    {% if session['type'] == 'operator' %}
     <div id="waitlist" style="margin-top: 2vh;"></div>
     <button type="button" onclick="getWaitlist()">get waitlist</button>
 
@@ -22,7 +28,17 @@
         <button type="button" onclick="confirmUser()">Submit</button>
     </form>
 
+    <form id="myForm" style="margin-top: 5vh;">
+        <h2>Delete</h2>
+        <label for="key">Key:</label>
+        <input type="text" id="key" name="key"><br><br>
+        <label for="value">Value:</label>
+        <input type="text" id="value" name="value"><br><br>
+        <button type="button" onclick="deleteValue()">Delete</button>
+    </form>
+
     <div id="response"></div>
+    {% endif %}
 
     <script>
         async function confirmUser() {
@@ -50,6 +66,28 @@
                 document.getElementById("response").innerHTML = data;
             } catch (error) {
                 document.getElementById("response").innerHTML = error.message;
+            }
+        }
+
+        async function deleteValue() {
+            try {
+                const key = document.getElementById('key').value;
+                const value = document.getElementById('value').value;
+                document.getElementById('key') = ''
+                document.getElementById('value') = ''
+
+                const response = await fetch('/delete_value', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({key: key, value: value})
+                });
+
+                const data = response.text();
+                document.getElementById('response').innerHTML = data;
+            } catch (error) {
+                document.getElementById('response').innerHTML = error.message;
             }
         }
 
@@ -85,6 +123,39 @@
                         <p style="margin-bottom: 1vh;">Name: ${data.names[index]}</p>
                     `;
                     waitlistContainer.appendChild(waitlistItem);
+                });
+            } catch (error) {
+                document.getElementById("waitlist").innerHTML = error.message;
+            }
+        }
+
+        async function getlist() {
+            try {
+                const list = document.getElementById('list_name').value;
+
+                const response = await fetch("/get_values", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }, 
+                    body: JSON.stringify({list: list})
+                });
+                if (!response.ok) {
+                    throw new Error("Error: " + response.status);
+                }
+                const data = await response.json();
+                
+                const listContainer = document.getElementById("list");
+                listContainer.innerHTML = '';
+
+                data.keys.forEach((key, index) => {
+                    const listItem = document.createElement('div');
+                    listItem.classList.add('list-item');
+                    listItem.innerHTML = `
+                        <h3>Key: ${key}</h3>
+                        <p style="margin-bottom: 1vh;">value: ${data.values[index]}</p>
+                    `;
+                    listContainer.appendChild(listItem);
                 });
             } catch (error) {
                 document.getElementById("waitlist").innerHTML = error.message;

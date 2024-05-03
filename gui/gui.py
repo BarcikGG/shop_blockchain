@@ -1,6 +1,6 @@
 import requests
 from transactions.tx import *
-from flask import Flask, jsonify, render_template, request, session
+from flask import Flask, jsonify, redirect, render_template, request, session, url_for
 import time
 import json
 
@@ -89,11 +89,32 @@ def login_user():
 
     session['adr'] = adr
     session['password'] = password
+    session['type'] = type
 
     result = json.loads(printList(type+"s")[adr])["fio"]
     session['fio'] = str(result)
 
     return jsonify(result)
+
+@app.route('/get_values', methods=['POST'])
+def get_values():
+    data = request.json
+    list_name = data['list']
+
+    list_dict = printList(list_name)
+    print(list_dict)
+    keys = list(list_dict.keys())
+    values = list()
+
+    for value in list_dict.values():
+        values.append(value)
+    
+    return jsonify({'keys': keys, 'values': values})
+
+@app.route('/user_logout')
+def logout():
+    session.clear()
+    return redirect(url_for('login'))
 
 @app.route('/add_product', methods=['POST'])
 def add_product():
@@ -106,6 +127,17 @@ def add_product():
     price = int(data['price'])
 
     result = createProduct(adr, password, name, description, price, region)
+    return jsonify(result)
+
+@app.route('/delete_value', methods=['POST'])
+def delete_value():
+    data = request.json
+    key = data['key']
+    value = data['value']
+    adr = session.get('adr')
+    password = session.get('password')
+
+    result = deleteValue(adr, password, key, value)
     return jsonify(result)
 
 @app.route('/buy_product', methods=['POST'])
@@ -236,6 +268,12 @@ def getProductPrice(prod_id):
 def buyProduct(adr, password, prod_id, amount):
     money = getProductPrice(prod_id) * amount
     tx = buy_product_tx(adr, password, amount, prod_id, money)
+    response = requests.post(BASE_URL+ports[adr]+SandB, json=tx)
+    print(response.json())
+    return checkStatus(response.json()['id'])
+
+def deleteValue(adr, password, key, value):
+    tx = delete_tx(adr, password, key, value)
     response = requests.post(BASE_URL+ports[adr]+SandB, json=tx)
     print(response.json())
     return checkStatus(response.json()['id'])

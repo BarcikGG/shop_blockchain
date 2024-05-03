@@ -3,11 +3,12 @@
 {% block title %}Товары{% endblock %}
 {% block content %}
     <div id="products" style="margin-top: 2vh;"></div>
-    <button type="button" onclick="getWaitProducts()">get wait products</button>
     <button type="button" onclick="getProducts()">get products</button>
-
+    
+    {% if session['type'] == 'operator' %}
+    <button type="button" onclick="getWaitProducts()">get wait products</button>
     <div class="forms" style="display: flex; gap: 5vw; align-items: flex-start;">
-        <form id="myForm" style="margin-top: 5vh; width: 50%; display: flex; flex-direction: column; justify-content: center;">
+        <form id="myForm">
             <h2>Accept product from waitlist</h2>
             <label for="prod">Product id:</label>
             <input type="text" id="prod" name="prod"><br><br>
@@ -22,8 +23,9 @@
             <input type="text" id="seller" name="seller"><br><br>
             <button type="button" onclick="confirmProduct()">accept</button>
         </form>
+    {% endif %}
 
-        <form id="myForm" style="margin-top: 5vh; width: 50%; display: flex; flex-direction: column; justify-content: center;">
+        <form id="myForm">
             <h2>Buy product</h2>
             <label for="product_id">Product id:</label>
             <input type="text" id="product_id" name="product_id"><br><br>
