@@ -131,12 +131,12 @@ def add_product():
 @app.route('/delete_value', methods=['POST'])
 def delete_value():
     data = request.json
-    key = data['key']
+    type = data['type']
     value = data['value']
     adr = session.get('adr')
     password = session.get('password')
 
-    result = deleteValue(adr, password, key, value)
+    result = deleteValue(adr, password, type, value)
     return jsonify(result)
 
 @app.route('/buy_product', methods=['POST'])
@@ -271,8 +271,8 @@ def buyProduct(adr, password, prod_id, amount):
     print(response.json())
     return checkStatus(response.json()['id'])
 
-def deleteValue(adr, password, key, value):
-    tx = delete_tx(adr, password, key, value)
+def deleteValue(adr, password, type, value):
+    tx = delete_tx(adr, password, type, value)
     response = requests.post(BASE_URL+ports[adr]+SandB, json=tx)
     print(response.json())
     return checkStatus(response.json()['id'])

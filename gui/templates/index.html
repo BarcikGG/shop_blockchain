@@ -31,11 +31,11 @@
     
         <form id="myForm" style="margin-top: 5vh;">
             <h2>Delete</h2>
-            <label for="key">List name:</label>
-            <input type="text" id="key" name="key"><br><br>
+            <label>List name:</label>
+            <input type="text" id="type"><br><br>
             <label for="value">Key:</label>
             <input type="text" id="value" name="value"><br><br>
-            <button type="button" onclick="deleteValue()">Delete</button>
+            <button type="button" onclick="deleteKeyValue()">Delete</button>
         </form>
     </div>
 
@@ -71,19 +71,20 @@
             }
         }
 
-        async function deleteValue() {
+        async function deleteKeyValue() {
             try {
-                const key = document.getElementById('key').value;
+                const type = document.getElementById('type').value;
                 const value = document.getElementById('value').value;
-                document.getElementById('key') = ''
-                document.getElementById('value') = ''
+                document.getElementById('type').value = '';
+                document.getElementById('value').value = '';
+                document.getElementById('response').value = 'sending...';
 
-                const response = await fetch('/delete_value', {
-                    method: 'POST',
+                const response = await fetch("/delete_value", {
+                    method: "POST",
                     headers: {
-                        'Content-Type': 'application/json'
+                        "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({key: key, value: value})
+                    body: JSON.stringify({type: type, value: value})
                 });
 
                 const data = response.text();

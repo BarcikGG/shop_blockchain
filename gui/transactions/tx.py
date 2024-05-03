@@ -159,7 +159,7 @@ def buy_product_tx(adr, password, amount, prod_id, money):
     }
     return tx
 
-def delete_tx(adr, password, key, value):
+def delete_tx(adr, password, type, value):
     tx = {
     "contractId": CONTRACTID,
     "fee": 0,
@@ -176,7 +176,7 @@ def delete_tx(adr, password, key, value):
         {
            "type": "string",
            "key": "type",
-           "value": key
+           "value": type
         },
         {
            "type": "string",
