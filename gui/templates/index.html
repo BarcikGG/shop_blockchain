@@ -19,7 +19,7 @@
     <div id="waitlist" style="margin-top: 2vh;"></div>
     <button type="button" onclick="getWaitlist()">get waitlist</button>
 
-    <div class="div" style="display: flex; gap: 15px;">
+    <div class="div" style="display: flex; gap: 15px; align-items: flex-start;">
         <form id="myForm" style="margin-top: 5vh;">
             <h2>Accept account from waitlist</h2>
             <label for="acc_type">Account Type:</label>
@@ -27,6 +27,13 @@
             <label for="acc_add">Account Address:</label>
             <input type="text" id="acc_add" name="acc_add"><br><br>
             <button type="button" onclick="confirmUser()">Submit</button>
+        </form>
+
+        <form id="myForm" style="margin-top: 5vh;">
+            <h2>Accept order</h2>
+            <label for="order_id">Order id:</label>
+            <input type="text" id="order_id" name="order_id"><br><br>
+            <button type="button" onclick="approve()">Submit</button>
         </form>
     
         <form id="myForm" style="margin-top: 5vh;">
@@ -68,6 +75,31 @@
                 document.getElementById("response").innerHTML = data;
             } catch (error) {
                 document.getElementById("response").innerHTML = error.message;
+            }
+        }
+
+        async function approve() {
+            try{
+                const order_id = document.getElementById("order_id").value;
+
+                document.getElementById('response').innerHTML = 'sending...';
+
+                const response = await fetch('/approve', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({order_id: order_id})
+                });
+
+                if(!response.ok) {
+                    document.getElementById('response').innerHTML = 'Error: '+ response.status
+                }
+
+                const data = await response.text();
+                document.getElementById('response').innerHTML = data
+            } catch(e) {
+                document.getElementById('response').innerHTML = e.message;
             }
         }
 

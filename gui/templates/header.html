@@ -7,8 +7,8 @@
             <a href="/">Главная</a>
             <a href="/profile">Профиль</a>
             <a href="/products">Продукты</a>
-            {% if session['type'] %}
-                <a href="/login" onclick="logout()">Выход</a>
+            {% if session['adr'] %}
+                <button onclick="logout()">Выход</button>
             {% else %}
                 <a href="/register">Регистрация</a>
                 <a href="/login">Вход</a>

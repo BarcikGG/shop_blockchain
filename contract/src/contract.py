@@ -97,6 +97,7 @@ class ContractHandler:
             elif action == "delete": self.__delete()
             elif action == "buy": self.__buy_product()
             elif action == "withdraw": self.__withdraw()
+            elif action == "approve": self.__approve()
             else: self.__set_error("Can't find action. Available: register, create_product, delete, buy, withdraw")
         except BaseException as error:
             self.__set_error(error)
@@ -318,8 +319,12 @@ class ContractHandler:
     def __approve(self):
         try:
             self.orders = self.__read_key("orders")
+            self.operators = self.__read_key("operators")
             id = find_string(self.__call_transaction.params, "order_id")
             
+            if self.__call_transaction.sender not in self.operators:
+                self.__set_error("You are not operator!")
+
             if id not in self.orders: self.__set_error('Cant find this order')
 
             order_data = json.loads(self.orders[id])

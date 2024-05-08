@@ -11,27 +11,54 @@
     <h2>Address: {{adr}}</h2>
     <h2>FIO: {{fio}}</h2>
     {% if session['type'] == 'seller' %}
+    <div class="div" style="display: flex; gap: 15px; align-items: flex-start;">
+        <form id="myForm">
+            <h2 style="text-align: center; margin-bottom: 2vh;">Add product</h2>                
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name"><br><br>
+
+            <label for="desc">Description:</label>
+            <input type="text" id="desc" name="desc"><br><br>
+            
+            <label for="region">Region:</label>
+            <input type="text" id="region" name="region"><br><br>
+
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price"><br><br>
+
+            <button type="button" 
+                style="height: 50px; background-color: #071bf3; color: #fff; border-radius: 5px;"
+                onclick="addProduct()">add product</button>
+
+            <div id="response"></div>
+        </form>
+
+        <form id="myForm">
+            <h2 style="text-align: center; margin-bottom: 2vh;">Withdraw</h2>                
+            <label for="order_id">order ID:</label>
+            <input type="text" id="order_id" name="order_id"><br><br>
+            <button type="button" 
+                style="height: 50px; background-color: #071bf3; color: #fff; border-radius: 5px;"
+                onclick="withdraw()">withdraw</button>
+
+            <div id="response"></div>
+        </form>
+    </div>
+    {% endif %}
     <form id="myForm">
-        <h2 style="text-align: center; margin-bottom: 2vh;">Add product</h2>                
-        <label for="name">Name:</label>
-        <input type="text" id="name" name="name"><br><br>
+        <h2 style="text-align: center; margin-bottom: 2vh;">Send money</h2>                
+        <label for="to">To:</label>
+        <input type="text" id="to" name="to"><br><br>
 
-        <label for="desc">Description:</label>
-        <input type="text" id="desc" name="desc"><br><br>
-        
-        <label for="region">Region:</label>
-        <input type="text" id="region" name="region"><br><br>
-
-        <label for="price">Price:</label>
-        <input type="number" id="price" name="price"><br><br>
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount"><br><br>
 
         <button type="button" 
             style="height: 50px; background-color: #071bf3; color: #fff; border-radius: 5px;"
-            onclick="addProduct()">add product</button>
+            onclick="sendMoney()">send</button>
 
         <div id="response"></div>
     </form>
-    {% endif %}
 
     <script>
         async function getBalance() {
@@ -76,6 +103,57 @@
                 document.getElementById("response").innerHTML = data;
             } catch (error) {
                 document.getElementById("response").innerHTML = error.message;
+            }
+        }
+
+        async function sendMoney() {
+            try{
+                const to = document.getElementById("to").value;
+                const amount = document.getElementById("amount").value;
+
+                document.getElementById('response').innerHTML = 'sending...'
+
+                const response = await fetch("/send_money", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({to: to, amount: amount})
+                });
+
+                if(!response.ok) {
+                    throw new Error('Error' + response.error);
+                }
+
+                const data = await response.text()
+                document.getElementById('response').innerHTML = data
+            } catch(e) {
+                document.getElementById('response').innerHTML = e.message
+            }
+        }
+
+        async function withdraw() {
+            try{
+                const order_id = document.getElementById("order_id").value;
+
+                document.getElementById('response').innerHTML = 'sending...';
+
+                const response = await fetch('/withdraw', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({order_id: order_id})
+                });
+
+                if(!response.ok) {
+                    document.getElementById('response').innerHTML = 'Error: '+ response.status
+                }
+
+                const data = await response.text();
+                document.getElementById('response').innerHTML = data
+            } catch(e) {
+                document.getElementById('response').innerHTML = e.message;
             }
         }
     </script>

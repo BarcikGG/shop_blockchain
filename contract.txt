@@ -1,4 +1,4 @@
-hash: a3ecdc78704a8c6a15ad584f10eeab31144638171e532ee045d74e1c5f70cbcc
+hash: abaadb76f4761364453e4391e108e56d9aaef90f44622f58cc5a5febab7a0b6b
 
 version: - 1
 
@@ -26,7 +26,7 @@ tokenID: C6FrUQWhBWiBHTvwytSDQjUoMZtm22pTWZjarfzChkyi
   "password": "DC3_0U7cCGhGQstieg8kHg",
   "fee" : 0,
   "contractId" : "AKdJi5iNT1Ztp9ik2er77hJC1mD458CCFowShA6ZHK9S",
-  "imageHash" : "a3ecdc78704a8c6a15ad584f10eeab31144638171e532ee045d74e1c5f70cbcc",
+  "imageHash" : "abaadb76f4761364453e4391e108e56d9aaef90f44622f58cc5a5febab7a0b6b",
   "type" : 107,
   "version" : 2
 }

@@ -1,6 +1,6 @@
 ASSETID = 'C6FrUQWhBWiBHTvwytSDQjUoMZtm22pTWZjarfzChkyi'
 CONTRACTID = 'AKdJi5iNT1Ztp9ik2er77hJC1mD458CCFowShA6ZHK9S'
-VERSION = 4
+VERSION = 6
 
 def confirm_account_tx(acc_type, acc_add):
     tx = {
@@ -229,3 +229,73 @@ def confirm_product_tx(adr, password, max, min, prod_id, sellers):
     }
     return tx
 
+def send_money_tx(adr, password, to, amount):
+   tx = {
+   "type": 4,
+   "version": 2,
+   "sender": adr,
+   "password": password,
+   "recipient": to,
+   "amount": amount,
+   "assetId": ASSETID,
+   "fee": 0
+   }
+
+   return tx
+
+def withdraw_tx(adr, password, id):
+   tx = {
+    "contractId": CONTRACTID,
+    "fee": 0,
+    "sender": adr,
+    "password": password,
+    "type": 104,
+    "params":
+    [
+        {
+           "type": "string",
+           "key": "action",
+           "value": "withdraw"
+        },
+        {
+           "type": "string",
+           "key": "order_id",
+           "value": id
+        },
+        {
+           "type": "string",
+           "key": "asset",
+           "value": ASSETID
+        }
+    ],
+    "version": 2,
+    "contractVersion": VERSION
+    }
+   
+   return tx
+
+def approve_tx(adr, password, id):
+   tx = {
+    "contractId": CONTRACTID,
+    "fee": 0,
+    "sender": adr,
+    "password": password,
+    "type": 104,
+    "params":
+    [
+        {
+           "type": "string",
+           "key": "action",
+           "value": "approve"
+        },
+        {
+           "type": "string",
+           "key": "order_id",
+           "value": id
+        }
+    ],
+    "version": 2,
+    "contractVersion": VERSION
+    }
+   
+   return tx

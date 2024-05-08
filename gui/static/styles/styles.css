@@ -19,6 +19,11 @@ input {
     margin-bottom: 2vh;
 }
 
+ul {
+    display: flex;
+    align-items: center;
+}
+
 button {
     height: 50px; 
     background-color: #071bf3; 

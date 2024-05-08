@@ -11,6 +11,7 @@ BASE_URL = 'http://localhost:'
 
 ports = {"3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp": "6862", 
          "3NoXmP2bv4xVajPGPZdzkKXy37dyUro7g7V": "6872",
+         "3NtW4TTNN8Cvq9WkSHGgrRHfA314vuzrY5z": "6882",
          "3NforeFPihoReVSCc18kriTbwdUamFbifLn": "6892"}
 
 SandB = '/transactions/signAndBroadcast/'
@@ -128,6 +129,28 @@ def add_product():
     result = createProduct(adr, password, name, description, price, region)
     return jsonify(result)
 
+@app.route('/send_money', methods=['POST'])
+def send_money():
+    data = request.json
+    to = data['to']
+    amount = int(data['amount'])
+    result = sendMoney(amount, to)
+    return jsonify(result)
+
+@app.route('/withdraw', methods=['POST'])
+def withdraw_money():
+    data = request.json
+    id = data['order_id']
+    result = withdrawMoney(id)
+    return jsonify(result)
+
+@app.route('/approve', methods=['POST'])
+def approve_order():
+    data = request.json
+    id = data['order_id']
+    result = approve(id)
+    return jsonify(result)
+
 @app.route('/delete_value', methods=['POST'])
 def delete_value():
     data = request.json
@@ -214,7 +237,6 @@ def getUserBalance():
     return str(response.json()['balance'])
 
 def checkStatus(transaction_id):
-    print(transaction_id)
     time.sleep(5)
     iteration = 0
     response = requests.get(Status+transaction_id)
@@ -229,7 +251,7 @@ def checkStatus(transaction_id):
                 return response.json()[-1]['message']
         time.sleep(2)
         response = requests.get(Status+transaction_id)
-        if iteration == 5:
+        if iteration == 8:
             break
 
     return 'cant send request'
@@ -259,6 +281,7 @@ def confirmProduct(adr, password, prod_id, min, max, sellers):
 def registerUser(type, adr, password, name, description, region, phone, fio):
     tx = register_user_tx(adr, password, type, name, description, region, phone, fio)
     response = requests.post(BASE_URL+ports[adr]+SandB, json=tx)
+    # print(response)
     return checkStatus(response.json()['id'])
 
 def getProductPrice(prod_id):
@@ -268,7 +291,28 @@ def buyProduct(adr, password, prod_id, amount):
     money = getProductPrice(prod_id) * amount
     tx = buy_product_tx(adr, password, amount, prod_id, money)
     response = requests.post(BASE_URL+ports[adr]+SandB, json=tx)
-    print(response.json())
+    # print(response.json())
+    return checkStatus(response.json()['id'])
+
+def sendMoney(amount, to):
+    adr = session.get('adr')
+    password = session.get('password')
+    tx = send_money_tx(adr, password, to, amount)
+    response = requests.post(BASE_URL+ports[adr]+SandB, json=tx)
+    return checkStatus(response.json()['id'])
+
+def withdrawMoney(id):
+    adr = session.get('adr')
+    password = session.get('password')
+    tx = withdraw_tx(adr, password, id)
+    response = requests.post(BASE_URL+ports[adr]+SandB, json=tx)
+    return checkStatus(response.json()['id'])
+
+def approve(id):
+    adr = session.get('adr')
+    password = session.get('password')
+    tx = approve_tx(adr, password, id)
+    response = requests.post(BASE_URL+ports[adr]+SandB, json=tx)
     return checkStatus(response.json()['id'])
 
 def deleteValue(adr, password, type, value):
