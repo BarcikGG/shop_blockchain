@@ -228,7 +228,8 @@ class ContractHandler:
 
     def __read_string(self, key):
         contract_key_request = contract_contract_service_pb2.ContractKeyRequest(
-            contract_id=self.__call_transaction.contract_id, key=key)
+            contract_id=self.__call_transaction.contract_id, 
+            key=key)
         contract_key = self.client.GetContractKey(request=contract_key_request, metadata=self.__metadata)
         return contract_key.entry.string_value
 
@@ -464,7 +465,8 @@ class ContractHandler:
     
     def __read_key(self, key) -> dict:
         contract_key_request = contract_contract_service_pb2.ContractKeyRequest(
-                contract_id=self.__call_transaction.contract_id, key=key)
+                contract_id=self.__call_transaction.contract_id, 
+                key=key)
         contract_key = self.client.GetContractKey(request=contract_key_request, metadata=self.__metadata)
         return json.loads(contract_key.entry.string_value)
 
