@@ -1,8 +1,8 @@
-hash: abaadb76f4761364453e4391e108e56d9aaef90f44622f58cc5a5febab7a0b6b
+hash: ca88d975a3ac7434797b2a9efa04fcaff31dfabfa3a268d4367cab7e804198fc
 
-version: - 1
+version: - 5
 
-id: AKdJi5iNT1Ztp9ik2er77hJC1mD458CCFowShA6ZHK9S
+id: 12jo8s3V6AbkPEPwwiizeQaVTtyxsYgcMUXMHHG8U7WL
 
 tokenID: C6FrUQWhBWiBHTvwytSDQjUoMZtm22pTWZjarfzChkyi
 
@@ -11,9 +11,9 @@ tokenID: C6FrUQWhBWiBHTvwytSDQjUoMZtm22pTWZjarfzChkyi
   "version": 2,
   "sender": "3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp",
   "password": "DC3_0U7cCGhGQstieg8kHg",
-  "image": "localhost:5000/shop",
-  "contractName": "shop",
-  "imageHash": "c3bc5bc01c4f268018cb643027af10bf9c47e9724d8b568b41cb6963a026f1d0",
+  "image": "localhost:5000/mail",
+  "contractName": "mail",
+  "imageHash": "ad347127df566c6aa0ff730afbd8b28da00cbd3c0ae39969a2d23cb8ea200e20",
   "params": [],
   "fee": 0,
   "feeAssetId": null
@@ -21,12 +21,12 @@ tokenID: C6FrUQWhBWiBHTvwytSDQjUoMZtm22pTWZjarfzChkyi
 
 //update
 {
-  "image" : "localhost:5000/shop",
+  "image" : "localhost:5000/mail",
   "sender" : "3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp",
   "password": "DC3_0U7cCGhGQstieg8kHg",
   "fee" : 0,
-  "contractId" : "AKdJi5iNT1Ztp9ik2er77hJC1mD458CCFowShA6ZHK9S",
-  "imageHash" : "abaadb76f4761364453e4391e108e56d9aaef90f44622f58cc5a5febab7a0b6b",
+  "contractId" : "12jo8s3V6AbkPEPwwiizeQaVTtyxsYgcMUXMHHG8U7WL",
+  "imageHash" : "ca88d975a3ac7434797b2a9efa04fcaff31dfabfa3a268d4367cab7e804198fc",
   "type" : 107,
   "version" : 2
 }

@@ -100,7 +100,7 @@ class ContractHandler:
             action = find_string(self.__call_transaction.params, "action")
             if action == "register": self.__register()
             elif action == "send mail": self.__send_mail()
-            else: self.__set_error("Can't find action. Available: register, create_product, delete, buy, withdraw")
+            else: self.__set_error("Can't find action. Available: register, send mail")
         except BaseException as error:
             self.__set_error(error)
     
@@ -140,17 +140,18 @@ class ContractHandler:
             index_from = find_int(self.__call_transaction.params, "from")
             index_to = find_int(self.__call_transaction.params, "to")
             sender = self.__call_transaction.sender
-            address_from = find_string(self.__call_transaction.params, "address_from")
-            address_to = find_string(self.__call_transaction.params, "address_to")
-            cost = find_int(self.__call_transaction.params, "cost")
+            address_from = json.loads(self.users[sender])['home_address']
             recipient = find_string(self.__call_transaction.params, "recipient")
+            cost = find_int(self.__call_transaction.params, "cost")
 
+            if recipient is None or recipient not in self.users: self.__set_error('Cant find recipient!')
+            
+            address_to = json.loads(self.users[recipient])['home_address']
             if type is None: self.__set_error('Type is required!')
             if address_from is None or address_to is None: self.__set_error('Addresses is reqired!')
-            if type != 'mail' or type != 'banderol' or type != 'package': self.__set_error('Wrong type: Choose: mail, banderol, package')
+            if type not in ['mail', 'banderol', 'package']: self.__set_error('Wrong type! Choose: mail, banderol, package')
             if mail_class is None: self.__set_error('Mail class is required!')
             if index_from is None or index_to is None: self.__set_error('Indexes class is required!')
-            if recipient is None: self.__set_error('Recipient is required!')
             if float(weight) > 10 or weight is None: self.__set_error('Wrong weight, max 10kg')
 
             need_days = mail_classes[mail_class]['days']
@@ -158,6 +159,7 @@ class ContractHandler:
 
             if cost is None: cost = 0
             total_price = delivery_price + (cost * 0.1)
+
 
             track_num = generate_number(start_time, end_time, old_last_sent, index_from, index_to)
 
@@ -176,26 +178,7 @@ class ContractHandler:
         except BaseException as error:
             self.__set_error(str(error))
 
-    def __approve(self):
-        try:
-            self.orders = self.__read_key("orders")
-            self.operators = self.__read_key("operators")
-            id = find_string(self.__call_transaction.params, "order_id")
-            
-            if self.__call_transaction.sender not in self.operators:
-                self.__set_error("You are not operator!")
-
-            if id not in self.orders: self.__set_error('Cant find this order')
-
-            order_data = json.loads(self.orders[id])
-            order_data['status'] = 'approved'
-
-            self.orders[id] = json.dumps(order_data)
-            self.__write_data([
-                data_entry_pb2.DataEntry(key="orders", string_value=json.dumps(self.orders))
-            ])
-        except BaseException as error:
-                self.__set_error(str(error))
+    
     
     def __withdraw(self):
         try:
@@ -297,8 +280,8 @@ class MoneyMail:
     def objToStr(self): return json.dumps(self.__dict__)
 
 def getDate(start_time, end_time):
-    dt = datetime.datetime(2024, 5, 14)
-    days = (end_time - start_time) // 5
+    dt = datetime.datetime(2024, 5, 16)
+    days = (end_time//1000 - start_time//1000) // 5
     dt += datetime.timedelta(days=days)
     return dt.strftime("%d%m%Y")
 

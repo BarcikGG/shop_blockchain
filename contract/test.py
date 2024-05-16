@@ -1,3 +1,6 @@
+import datetime
+
+
 indexes = {
     344000: "Rostov",
     347900: "Taganrog",
@@ -53,5 +56,14 @@ def price(mail_class, weight, cost):
     print(f'days: {need_days}')
     print(f'total: {total_price}')
 
-price(1, "10", 100)
+
+def getDate(start_time, end_time):
+    dt = datetime.datetime(2024, 5, 16)
+    days = (end_time//1000 - start_time//1000) // 5
+    dt += datetime.timedelta(days=days)
+    return dt.strftime("%d%m%Y")
+            # 1715839200  1715887800
+print(getDate(1715839200800, 1715887800926))
+
+# price(1, "10", 100)
 # print(create_map(346781, 346781))

@@ -1,41 +1,9 @@
-// reg operator
+// reg
 {
-    "contractId": "7FkN3UdoBq8thzfYgrYpoaDPmRK59qnCLJkUvXJNN4wW",
+    "contractId": "12jo8s3V6AbkPEPwwiizeQaVTtyxsYgcMUXMHHG8U7WL",
     "fee": 0,
-    "sender": "3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp",
-    "password": "DC3_0U7cCGhGQstieg8kHg",
-    "type": 104,
-    "params":
-    [
-        {
-           "type": "string",
-           "key": "action",
-           "value": "register_operator"
-        },
-        {
-           "type": "string",
-           "key": "phone",
-           "value": "79030537447"
-
-        },
-        {
-           "type": "string",
-           "key": "fio",
-           "value": "Dergachev"
-
-        }
-    ],
-    "version": 2,
-    "contractVersion": 1
-}
-
-
-// reg seller
-{
-    "contractId": "7FkN3UdoBq8thzfYgrYpoaDPmRK59qnCLJkUvXJNN4wW",
-    "fee": 0,
-    "sender": "3NeRhvAa5pB1GhKCVkp8JYa4s2MsXgEztTX",
-    "password": "bLVAVtb2Sg-dwT_eOQjRWg",
+    "sender": "3NoXmP2bv4xVajPGPZdzkKXy37dyUro7g7V",
+    "password": "TSFu-6QrpWsIIApnDJdmXg",
     "type": 104,
     "params":
     [
@@ -46,265 +14,71 @@
         },
         {
            "type": "string",
-           "key": "type",
-           "value": "seller"
-        },
-        {
-           "type": "string",
-           "key": "region",
-           "value": "Moscow"
-        },
-        {
-           "type": "string",
            "key": "name",
-           "value": "Best Seller"
-        },
-        {
-           "type": "string",
-           "key": "description",
-           "value": "Some string description"
-        },
-        {
-           "type": "string",
-           "key": "phone",
-           "value": "88005553535"
+           "value": "Dergachev Daniil Yrevich"
 
         },
         {
            "type": "string",
-           "key": "fio",
-           "value": "Bobrov"
+           "key": "home_address",
+           "value": "Dorozhnaya 14  kv 25"
 
         }
     ],
     "version": 2,
-    "contractVersion": 2
+    "contractVersion": 3
 }
 
-
-//reg dist 
+// send mail
 {
-    "contractId": "7FkN3UdoBq8thzfYgrYpoaDPmRK59qnCLJkUvXJNN4wW",
+    "contractId": "12jo8s3V6AbkPEPwwiizeQaVTtyxsYgcMUXMHHG8U7WL",
     "fee": 0,
-    "sender": "3NqL9EMG2HueKYXmz5pKxJTDjVazbPQme9c",
-    "password": "yZKeuFD7QWqUDkZup5xAGg",
+    "sender": "3NoXmP2bv4xVajPGPZdzkKXy37dyUro7g7V",
+    "password": "TSFu-6QrpWsIIApnDJdmXg",
     "type": 104,
     "params":
     [
         {
            "type": "string",
            "key": "action",
-           "value": "register"
+           "value": "send mail"
         },
         {
            "type": "string",
            "key": "type",
-           "value": "dist"
-        },
-        {
-           "type": "string",
-           "key": "region",
-           "value": "Saint p"
-        },
-        {
-           "type": "string",
-           "key": "name",
-           "value": "Milka"
-        },
-        {
-           "type": "string",
-           "key": "phone",
-           "value": "79047129332"
-
-        },
-        {
-           "type": "string",
-           "key": "fio",
-           "value": "Feofilov"
-
-        }
-    ],
-    "version": 2,
-    "contractVersion": 1
-}
-
-//confirm account 
-{
-    "contractId": "7FkN3UdoBq8thzfYgrYpoaDPmRK59qnCLJkUvXJNN4wW",
-    "fee": 0,
-    "sender": "3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp",
-    "password": "DC3_0U7cCGhGQstieg8kHg",
-    "type": 104,
-    "params":
-    [
-        {
-           "type": "string",
-           "key": "action",
-           "value": "accept_reg"
-        },
-        {
-           "type": "string",
-           "key": "type",
-           "value": "client"
-        },
-        {
-           "type": "string",
-           "key": "account",
-           "value": "3Nx38NJhdvMtXs3F149Z28syyixAZ8gvpeR"
-        }
-    ],
-    "version": 2,
-    "contractVersion": 1
-}
-
-//create product
-{
-    "contractId": "7FkN3UdoBq8thzfYgrYpoaDPmRK59qnCLJkUvXJNN4wW",
-    "fee": 0,
-    "sender": "3NeRhvAa5pB1GhKCVkp8JYa4s2MsXgEztTX",
-    "password": "bLVAVtb2Sg-dwT_eOQjRWg",
-    "type": 104,
-    "params":
-    [
-        {
-           "type": "string",
-           "key": "action",
-           "value": "create_product"
-        },
-        {
-           "type": "string",
-           "key": "title",
-           "value": "Black tea"
-        },
-        {
-           "type": "string",
-           "key": "description",
-           "value": "good tea"
-        },
-        {
-           "type": "string",
-           "key": "regions",
-           "value": "Moscow"
+           "value": "mail"
         },
         {
            "type": "integer",
-           "key": "price",
-           "value": 200
-        }
-    ],
-    "version": 2,
-    "contractVersion": 2
-}
-
-//accept_product
-{
-    "contractId": "7FkN3UdoBq8thzfYgrYpoaDPmRK59qnCLJkUvXJNN4wW",
-    "fee": 0,
-    "sender": "3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp",
-    "password": "DC3_0U7cCGhGQstieg8kHg",
-    "type": 104,
-    "params":
-    [
+           "key": "class",
+           "value": 1
+        },
         {
            "type": "string",
-           "key": "action",
-           "value": "accept_product"
+           "key": "weight",
+           "value": "7.5"
         },
         {
            "type": "integer",
-           "key": "max",
-           "value": 100
+           "key": "from",
+           "value": 346781
         },
         {
            "type": "integer",
-           "key": "min",
-           "value": 2
-        },
-        {
-           "type": "string",
-           "key": "title",
-           "value": "Black tea"
-        },
-        {
-         "type": "string",
-           "key": "id",
-           "value": "73608"
-        },
-        {
-           "type": "string",
-           "key": "sellers",
-           "value": "3NeRhvAa5pB1GhKCVkp8JYa4s2MsXgEztTX"
-        }
-    ],
-    "version": 2,
-    "contractVersion": 2
-}
-
-//buy product
-{
-    "contractId": "7FkN3UdoBq8thzfYgrYpoaDPmRK59qnCLJkUvXJNN4wW",
-    "fee": 0,
-    "sender": "3NuuxfRrFc6rdHPSNiBR4QTdGLuFUY8i6Vh",
-    "password": "777",
-    "type": 104,
-    "params":
-    [
-        {
-           "type": "string",
-           "key": "action",
-           "value": "buy"
+           "key": "to",
+           "value": 347901
         },
         {
            "type": "integer",
-           "key": "amount",
-           "value": 5
+           "key": "cost",
+           "value": 2500
         },
         {
            "type": "string",
-           "key": "id",
-           "value": "72608"
-        },
-        {
-           "type": "string",
-           "key": "regions",
-           "value": "Moscow"
-        }
-    ],
-    "payments": [
-      {
-        "assetId": "5GXaMm4nRsP4JMkMgRitLJfiaf9q8QF5MeLk8g4HZAws",
-        "amount": 100
-      }
-    ],
-    "version": 5,
-    "contractVersion": 2
-}
-
-// delete 
-{
-    "contractId": "7FkN3UdoBq8thzfYgrYpoaDPmRK59qnCLJkUvXJNN4wW",
-    "fee": 0,
-    "sender": "3NuGr9uc7UkJ6MiEx5UJsRcFVhRts3DHtm3",
-    "password": "DC3_0U7cCGhGQstieg8kHg",
-    "type": 104,
-    "params":
-    [
-        {
-           "type": "string",
-           "key": "action",
-           "value": "delete"
-        },
-        {
-           "type": "string",
-           "key": "type",
-           "value": "organization"
-        },
-        {
-           "type": "string",
-           "key": "key",
-           "value": "Milka"
+           "key": "recipient",
+           "value": "3NtW4TTNN8Cvq9WkSHGgrRHfA314vuzrY5z"
         }
     ],
     "version": 2,
-    "contractVersion": 1
+    "contractVersion": 3
 }
