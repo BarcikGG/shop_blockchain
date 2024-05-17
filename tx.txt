@@ -1,9 +1,11 @@
 // reg
+
+H9NWjcwfw3ytoqPEuGCcXuH7b743Hj9ZwGS1kWaJeBf1
 {
-    "contractId": "12jo8s3V6AbkPEPwwiizeQaVTtyxsYgcMUXMHHG8U7WL",
+    "contractId": "PGqyacxCpYyzgwdhg8m2WnSZ8cBd42oHmcQFKGYyKBR",
     "fee": 0,
-    "sender": "3NoXmP2bv4xVajPGPZdzkKXy37dyUro7g7V",
-    "password": "TSFu-6QrpWsIIApnDJdmXg",
+    "sender": "3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp",
+    "password": "DC3_0U7cCGhGQstieg8kHg",
     "type": 104,
     "params":
     [
@@ -26,12 +28,12 @@
         }
     ],
     "version": 2,
-    "contractVersion": 3
+    "contractVersion": 1
 }
 
 // send mail
 {
-    "contractId": "12jo8s3V6AbkPEPwwiizeQaVTtyxsYgcMUXMHHG8U7WL",
+    "contractId": "PGqyacxCpYyzgwdhg8m2WnSZ8cBd42oHmcQFKGYyKBR",
     "fee": 0,
     "sender": "3NoXmP2bv4xVajPGPZdzkKXy37dyUro7g7V",
     "password": "TSFu-6QrpWsIIApnDJdmXg",
@@ -80,5 +82,5 @@
         }
     ],
     "version": 2,
-    "contractVersion": 3
+    "contractVersion": 1
 }

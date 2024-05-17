@@ -1,8 +1,8 @@
-hash: 9b50f580ff1320f83098a0d642a532510efc83615a12af1cc23b0db9a36d8ebd
+hash: 4036839aa2e990b6eaf04c278ad715d0a2eb7ccbfcb1b70c3623982aa69432c1
 
-version: - 5
+version: - 2
 
-id: 8tPvrV8coLgK2n3qYiQGfVck3jz8Rv3wksgBpqBKpKTA
+id: PGqyacxCpYyzgwdhg8m2WnSZ8cBd42oHmcQFKGYyKBR
 
 tokenID: C6FrUQWhBWiBHTvwytSDQjUoMZtm22pTWZjarfzChkyi
 
@@ -12,8 +12,8 @@ tokenID: C6FrUQWhBWiBHTvwytSDQjUoMZtm22pTWZjarfzChkyi
   "sender": "3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp",
   "password": "DC3_0U7cCGhGQstieg8kHg",
   "image": "localhost:5000/mail",
-  "contractName": "mail",
-  "imageHash": "9b50f580ff1320f83098a0d642a532510efc83615a12af1cc23b0db9a36d8ebd",
+  "contractName": "mail update",
+  "imageHash": "a5b5a1b4b2c8dbc5a885e2cb8823bbb51d61cac1bd0856a63a0a79851721525a",
   "params": [],
   "fee": 0,
   "feeAssetId": null
@@ -25,8 +25,8 @@ tokenID: C6FrUQWhBWiBHTvwytSDQjUoMZtm22pTWZjarfzChkyi
   "sender" : "3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp",
   "password": "DC3_0U7cCGhGQstieg8kHg",
   "fee" : 0,
-  "contractId" : "12jo8s3V6AbkPEPwwiizeQaVTtyxsYgcMUXMHHG8U7WL",
-  "imageHash" : "d47a7bc0c42ae0eba10c96bfa67c1f7f013ac5250a9ed554f88923cdc5a421e4",
+  "contractId" : "PGqyacxCpYyzgwdhg8m2WnSZ8cBd42oHmcQFKGYyKBR",
+  "imageHash" : "03e34e358d4bba043e548f507b2d604fd8cb5c47ac4da73388d5297d085c0767",
   "type" : 107,
   "version" : 2
 }

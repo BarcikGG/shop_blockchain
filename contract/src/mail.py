@@ -85,21 +85,27 @@ class ContractHandler:
         create_transaction = contract_transaction_response.transaction
         metadata = [(AUTH_METADATA_KEY, contract_transaction_response.auth_token)]
 
-        new_admin = User({"name": 'Семенов Семен Семенович', 'balance': 50,
-                          "home_address": 'Pushkina 8 kv 15', "role": 'admin'})
-        self.users[create_transaction.sender] = new_admin.objToStr()
+        try:
+            self.workers = {}
+            self.users = {}
 
-        new_client = User({"name": 'Юрьев Юрий Юрьевич', 'balance': 50,
-                           "home_address": 'Doroznya 10 kv 16', "role": 'client'})
-        self.users['3NforeFPihoReVSCc18kriTbwdUamFbifLn'] = new_client.objToStr()
+            new_worker2 = Worker({"name": 'Антонов Антон Антонович', "home_address": 'Doroznya 11 kv 17', 
+                                "role": 'worker', 'ident': 'RR347900'})
+            self.workers["3NoXmP2bv4xVajPGPZdzkKXy37dyUro7g7V"] = new_worker2.objToStr()
 
-        new_worker = Worker({"name": 'Петров Петр Петрович', "home_address": 'Doroznya 20 kv 14', 
-                             "role": 'worker', 'ident': 'RR344000', 'balance': 50})
-        self.workers[create_transaction.sender] = new_worker.objToStr()
+            new_admin = User({"name": 'Семенов Семен Семенович',
+                    "home_address": 'Pushkina 8 kv 15', "role": 'admin'})
+            self.users[create_transaction.sender] = new_admin.objToStr()
 
-        new_worker2 = Worker({"name": 'Антонов Антон Антонович', "home_address": 'Doroznya 11 kv 17', 
-                              "role": 'worker', 'ident': 'RR347900', 'balance': 50})
-        self.workers[create_transaction.sender] = new_worker2.objToStr()
+            new_client = User({"name": 'Юрьев Юрий Юрьевич',
+                            "home_address": 'Doroznya 10 kv 16', "role": 'client'})
+            self.users['3NforeFPihoReVSCc18kriTbwdUamFbifLn'] = new_client.objToStr()
+
+            new_worker = Worker({"name": 'Петров Петр Петрович', "home_address": 'Doroznya 20 kv 14', 
+                                "role": 'worker', 'ident': 'RR344000'})
+            self.workers["3NtW4TTNN8Cvq9WkSHGgrRHfA314vuzrY5z"] = new_worker.objToStr()
+        except BaseException as err:
+            self.__set_error(str(err))
 
         data = [
             data_entry_pb2.DataEntry(key="users", string_value=json.dumps(self.users)),
@@ -119,6 +125,7 @@ class ContractHandler:
     def __handle_call_transaction(self, contract_transaction_response):
         self.__call_transaction = contract_transaction_response.transaction
         self.__metadata = [(AUTH_METADATA_KEY, contract_transaction_response.auth_token)]
+
         try:
             action = find_string(self.__call_transaction.params, "action")
             if action == "register": self.__register()
@@ -146,7 +153,7 @@ class ContractHandler:
             if name is None: self.__set_error("Name is required")
             if home_adr is None: self.__set_error("Home address is required")
 
-            new_user = User({"name": name, "home_address": home_adr, 'balance': 50, "role": 'client'})
+            new_user = User({"name": name, "home_address": home_adr, "role": 'client'})
             self.users[self.__call_transaction.sender] = new_user.objToStr()
 
             self.__write_data([
@@ -173,7 +180,7 @@ class ContractHandler:
                 user_info = json.loads(self.users[adr])
 
                 new_worker = Worker({"name": user_info['name'], "home_address": user_info['home_address'], 
-                             "role": 'worker', 'ident': f'RR{index}', 'balance': user_info['balance']})
+                             "role": 'worker', 'ident': f'RR{index}'})
                 self.workers[adr] = new_worker.objToStr()
             if type == 'edit':
                 if adr not in self.workers: self.__set_error('Worker is not registered')
@@ -252,10 +259,6 @@ class ContractHandler:
             if cost is None: cost = 0
             total_price = delivery_price + (cost * 0.1)
 
-            current_user = json.loads(self.users[sender])
-
-            if float(current_user['balance']) < total_price: self.__set_error('Not enough money')
-
             payments = self.__call_transaction.payments
             if len(payments) != 1: self.__set_error('Wrong payments')
             if float(payments[0].amount) < total_price: self.__set_error('Not enough money in payments')
@@ -268,10 +271,7 @@ class ContractHandler:
                          "address_to": {"index": index_to, "address": address_to}, 
                          "address_from": {"index": index_from, "address": address_from}})
 
-            current_user['balance'] = float(current_user['balance']) - total_price
-
             self.mails[track_num] = mail.objToStr()
-            self.users[sender] = json.dumps(current_user)
             self.__write_data([
                 data_entry_pb2.DataEntry(key="mails",string_value=json.dumps(self.mails)),
                 data_entry_pb2.DataEntry(key="users",string_value=json.dumps(self.users)),
@@ -356,18 +356,12 @@ class ContractHandler:
             recipient = find_string(self.__call_transaction.params, "recipient")
             lifetime = find_int(self.__call_transaction.params, "lifetime")
 
-            current_user = json.loads(self.users[sender])
-
             if sender not in self.users or sender not in self.workers: self.__set_error('You must be registered!')
             if recipient not in self.users or recipient not in self.workers: self.__set_error('Wrong recipient!')
             if lifetime is None or lifetime <= 0: self.__set_error('Lifetime must be int and > 0')
 
             payments = self.__call_transaction.payments
             if len(payments) != 1: self.__set_error("Wrong payments")
-            if int(current_user['balance']) < payments[0].amount: self.__set_error("Not enough money!")
-
-            current_user['balance'] = current_user['balance'] - payments[0].amount
-            self.users[sender] = json.dumps(current_user)
 
             time = send_time//1000
             new_moneyMail = MoneyMail({"sender": sender, "recipient": recipient, "amount": payments[0].amount, "lifetime": lifetime, "time": time})
@@ -389,7 +383,6 @@ class ContractHandler:
             self.money_mails = self.__read_key("money_mails")
             sender = self.__call_transaction.sender
             id = find_int(self.__call_transaction.params, "transact_number")
-            now_time = int(self.__call_transaction.timestamp)
             
             if sender not in self.users or sender not in self.workers: self.__set_error('You must be registered!')
             if id not in self.money_mails: self.__set_error('Wrong money transaction id')
@@ -420,10 +413,6 @@ class ContractHandler:
             if sender != money_info['sender']: self.__set_error('Its not your sent!')
 
             amount = money_info["amount"]
-
-            current_user = json.loads(self.users[sender])
-            current_user['balance'] = current_user['balance'] + amount
-            self.users[sender] = json.dumps(current_user)
 
             transfer = contract_transfer_out_pb2.ContractTransferOut()
             
@@ -467,10 +456,6 @@ class ContractHandler:
             if life_to < now_time : self.__set_error('Lifetime is end!')
 
             amount = money_info["amount"]
-
-            current_user = json.loads(self.users[sender])
-            current_user['balance'] = current_user['balance'] + amount
-            self.users[sender] = json.dumps(current_user)
 
             transfer = contract_transfer_out_pb2.ContractTransferOut()
             
@@ -529,7 +514,6 @@ class ContractHandler:
 class User:
     def __init__(self, dictionary) -> None:
         self.name = dictionary["name"]
-        self.balance = dictionary["balance"]
         self.home_address = dictionary["home_address"]
         self.role = dictionary["role"]
     def objToStr(self): return json.dumps(self.__dict__)
@@ -537,10 +521,10 @@ class User:
 class Worker:
     def __init__(self, dictionary) -> None:
         self.name = dictionary["name"]
-        self.balance = dictionary["balance"]
         self.home_address = dictionary["home_address"]
         self.role = dictionary["role"]
         self.ident = dictionary["ident"]
+    def objToStr(self): return json.dumps(self.__dict__)
 
 class Mail:
     def __init__(self, dictionary) -> None:
