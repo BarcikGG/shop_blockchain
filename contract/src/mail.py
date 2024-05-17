@@ -441,7 +441,7 @@ class ContractHandler:
             assetID = find_string(self.__call_transaction.params, "asset")
             id = find_string(self.__call_transaction.params, "transact_number")
 
-            now_time = int(self.__call_transaction.timestamp)
+            now_time = int(self.__call_transaction.timestamp)//1000
             
             if sender not in self.users: self.__set_error('You must be registered!')
             if id not in self.money_mails: self.__set_error('Wrong money transaction id')
