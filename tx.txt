@@ -1,8 +1,6 @@
 // reg
-
-H9NWjcwfw3ytoqPEuGCcXuH7b743Hj9ZwGS1kWaJeBf1
 {
-    "contractId": "PGqyacxCpYyzgwdhg8m2WnSZ8cBd42oHmcQFKGYyKBR",
+    "contractId": "MYKqUMjzqGiwQXuGTfrN8QhuodTezQSDrsNrUVwn4Mq",
     "fee": 0,
     "sender": "3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp",
     "password": "DC3_0U7cCGhGQstieg8kHg",
@@ -33,10 +31,10 @@ H9NWjcwfw3ytoqPEuGCcXuH7b743Hj9ZwGS1kWaJeBf1
 
 // send mail
 {
-    "contractId": "PGqyacxCpYyzgwdhg8m2WnSZ8cBd42oHmcQFKGYyKBR",
+    "contractId": "MYKqUMjzqGiwQXuGTfrN8QhuodTezQSDrsNrUVwn4Mq",
     "fee": 0,
-    "sender": "3NoXmP2bv4xVajPGPZdzkKXy37dyUro7g7V",
-    "password": "TSFu-6QrpWsIIApnDJdmXg",
+    "sender": "3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp",
+    "password": "DC3_0U7cCGhGQstieg8kHg",
     "type": 104,
     "params":
     [
@@ -58,7 +56,7 @@ H9NWjcwfw3ytoqPEuGCcXuH7b743Hj9ZwGS1kWaJeBf1
         {
            "type": "string",
            "key": "weight",
-           "value": "7.5"
+           "value": "1.2"
         },
         {
            "type": "integer",
@@ -68,19 +66,119 @@ H9NWjcwfw3ytoqPEuGCcXuH7b743Hj9ZwGS1kWaJeBf1
         {
            "type": "integer",
            "key": "to",
-           "value": 347901
+           "value": 347900
         },
         {
            "type": "integer",
            "key": "cost",
-           "value": 2500
+           "value": 10
         },
         {
            "type": "string",
            "key": "recipient",
-           "value": "3NtW4TTNN8Cvq9WkSHGgrRHfA314vuzrY5z"
+           "value": "3NforeFPihoReVSCc18kriTbwdUamFbifLn"
+        }
+    ],
+    "payments": [
+      {
+        "assetId": "C6FrUQWhBWiBHTvwytSDQjUoMZtm22pTWZjarfzChkyi",
+        "amount": 30
+      }
+    ],
+    "version": 5,
+    "contractVersion": 2
+}
+
+{
+    "contractId": "MYKqUMjzqGiwQXuGTfrN8QhuodTezQSDrsNrUVwn4Mq",
+    "fee": 0,
+    "sender": "3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp",
+    "password": "DC3_0U7cCGhGQstieg8kHg",
+    "type": 104,
+    "params":
+    [
+        {
+           "type": "string",
+           "key": "action",
+           "value": "send money"
+        },
+        {
+           "type": "integer",
+           "key": "lifetime",
+           "value": 365
+        },
+        {
+           "type": "string",
+           "key": "recipient",
+           "value": "3NforeFPihoReVSCc18kriTbwdUamFbifLn"
+        }
+    ],
+    "payments": [
+      {
+        "assetId": "C6FrUQWhBWiBHTvwytSDQjUoMZtm22pTWZjarfzChkyi",
+        "amount": 500
+      }
+    ],
+    "version": 5,
+    "contractVersion": 4
+}
+
+//approve mail
+{
+    "contractId": "MYKqUMjzqGiwQXuGTfrN8QhuodTezQSDrsNrUVwn4Mq",
+    "fee": 0,
+    "sender": "3NoXmP2bv4xVajPGPZdzkKXy37dyUro7g7V",
+    "password": "TSFu-6QrpWsIIApnDJdmXg",
+    "type": 104,
+    "params":
+    [
+        {
+           "type": "string",
+           "key": "action",
+           "value": "approve mail"
+        },
+        {
+           "type": "string",
+           "key": "weight",
+           "value": "2"
+
+        },
+        {
+           "type": "string",
+           "key": "track_number",
+           "value": "RR190820241346781347901"
         }
     ],
     "version": 2,
-    "contractVersion": 1
+    "contractVersion": 2
+}
+
+
+//receive money
+{
+    "contractId": "MYKqUMjzqGiwQXuGTfrN8QhuodTezQSDrsNrUVwn4Mq",
+    "fee": 0,
+    "sender": "3NforeFPihoReVSCc18kriTbwdUamFbifLn",
+    "password": "777",
+    "type": 104,
+    "params":
+    [
+        {
+           "type": "string",
+           "key": "action",
+           "value": "receive"
+        },
+        {
+           "type": "string",
+           "key": "transact_number",
+           "value": "3"
+        },
+        {
+           "type": "string",
+           "key": "asset",
+           "value": "C6FrUQWhBWiBHTvwytSDQjUoMZtm22pTWZjarfzChkyi"
+        }
+    ],
+    "version": 2,
+    "contractVersion": 4
 }

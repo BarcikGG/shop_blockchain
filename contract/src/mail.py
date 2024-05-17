@@ -324,8 +324,8 @@ class ContractHandler:
             if track_num not in self.history:
                 if mail_info['address_from']['index'] != int(worker_ident[2:]): self.__set_error('Mail not in this place')
                 
-                new_transit = HistoryItem([{"worker": worker_ident, "track": track_num, "weight": weight}])
-                self.history[track_num] = new_transit.objToStr()
+                new_transit = [{"worker": worker_ident, "track": track_num, "weight": weight}] # Error: list indices must be integers or slices, not str
+                self.history[track_num] = json.dumps(new_transit)
             else:
                 items = json.loads(self.history[track_num])
                 last_index = int(items[len(items) - 1]['worker'][2:]) # получили индекс почты которая была последней
@@ -356,8 +356,8 @@ class ContractHandler:
             recipient = find_string(self.__call_transaction.params, "recipient")
             lifetime = find_int(self.__call_transaction.params, "lifetime")
 
-            if sender not in self.users or sender not in self.workers: self.__set_error('You must be registered!')
-            if recipient not in self.users or recipient not in self.workers: self.__set_error('Wrong recipient!')
+            if sender not in self.users: self.__set_error('You must be registered!')
+            if recipient not in self.users: self.__set_error('Wrong recipient!')
             if lifetime is None or lifetime <= 0: self.__set_error('Lifetime must be int and > 0')
 
             payments = self.__call_transaction.payments
@@ -382,9 +382,9 @@ class ContractHandler:
             self.users = self.__read_key('users')
             self.money_mails = self.__read_key("money_mails")
             sender = self.__call_transaction.sender
-            id = find_int(self.__call_transaction.params, "transact_number")
+            id = find_string(self.__call_transaction.params, "transact_number")
             
-            if sender not in self.users or sender not in self.workers: self.__set_error('You must be registered!')
+            if sender not in self.users: self.__set_error('You must be registered!')
             if id not in self.money_mails: self.__set_error('Wrong money transaction id')
             money_info = json.loads(self.money_mails[id])
 
@@ -404,9 +404,9 @@ class ContractHandler:
             self.money_mails = self.__read_key("money_mails")
             sender = self.__call_transaction.sender
             assetID = find_string(self.__call_transaction.params, "asset")
-            id = find_int(self.__call_transaction.params, "transact_number")
+            id = find_string(self.__call_transaction.params, "transact_number")
             
-            if sender not in self.users or sender not in self.workers: self.__set_error('You must be registered!')
+            if sender not in self.users: self.__set_error('You must be registered!')
             if id not in self.money_mails: self.__set_error('Wrong money transaction id')
             money_info = json.loads(self.money_mails[id])
 
@@ -439,11 +439,11 @@ class ContractHandler:
             self.money_mails = self.__read_key("money_mails")
             sender = self.__call_transaction.sender
             assetID = find_string(self.__call_transaction.params, "asset")
-            id = find_int(self.__call_transaction.params, "transact_number")
+            id = find_string(self.__call_transaction.params, "transact_number")
 
             now_time = int(self.__call_transaction.timestamp)
             
-            if sender not in self.users or sender not in self.workers: self.__set_error('You must be registered!')
+            if sender not in self.users: self.__set_error('You must be registered!')
             if id not in self.money_mails: self.__set_error('Wrong money transaction id')
             money_info = json.loads(self.money_mails[id])
 
