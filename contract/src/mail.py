@@ -84,28 +84,43 @@ class ContractHandler:
     def __handle_create_transaction(self, contract_transaction_response):
         create_transaction = contract_transaction_response.transaction
         metadata = [(AUTH_METADATA_KEY, contract_transaction_response.auth_token)]
+        self.workers = {}
+        self.users = {}
 
-        try:
-            self.workers = {}
-            self.users = {}
+        new_worker2 = Worker({"name": 'Антонов Антон Антонович', "home_address": 'Doroznya 11 kv 17', 
+                            "role": 'worker', 'ident': 'RR347900'})
+        self.workers["3NoXmP2bv4xVajPGPZdzkKXy37dyUro7g7V"] = new_worker2.objToStr()
 
-            new_worker2 = Worker({"name": 'Антонов Антон Антонович', "home_address": 'Doroznya 11 kv 17', 
-                                "role": 'worker', 'ident': 'RR347900'})
-            self.workers["3NoXmP2bv4xVajPGPZdzkKXy37dyUro7g7V"] = new_worker2.objToStr()
+        new_admin = User({"name": 'Семенов Семен Семенович',
+                "home_address": 'Pushkina 8 kv 15', "role": 'admin'})
+        self.users[create_transaction.sender] = new_admin.objToStr()
 
-            new_admin = User({"name": 'Семенов Семен Семенович',
-                    "home_address": 'Pushkina 8 kv 15', "role": 'admin'})
-            self.users[create_transaction.sender] = new_admin.objToStr()
+        new_client = User({"name": 'Юрьев Юрий Юрьевич',
+                        "home_address": 'Doroznya 10 kv 16', "role": 'client'})
+        self.users['3NforeFPihoReVSCc18kriTbwdUamFbifLn'] = new_client.objToStr()
 
-            new_client = User({"name": 'Юрьев Юрий Юрьевич',
-                            "home_address": 'Doroznya 10 kv 16', "role": 'client'})
-            self.users['3NforeFPihoReVSCc18kriTbwdUamFbifLn'] = new_client.objToStr()
+        new_worker = Worker({"name": 'Петров Петр Петрович', "home_address": 'Doroznya 20 kv 14', 
+                            "role": 'worker', 'ident': 'RR344000'})
+        self.workers["3NtW4TTNN8Cvq9WkSHGgrRHfA314vuzrY5z"] = new_worker.objToStr()
 
-            new_worker = Worker({"name": 'Петров Петр Петрович', "home_address": 'Doroznya 20 kv 14', 
-                                "role": 'worker', 'ident': 'RR344000'})
-            self.workers["3NtW4TTNN8Cvq9WkSHGgrRHfA314vuzrY5z"] = new_worker.objToStr()
-        except BaseException as err:
-            self.__set_error(str(err))
+        transfer = contract_transfer_out_pb2.ContractTransferOut()
+        transfer.asset_id.value = "CkUnhCezFthA4kkHXiewhQV4CmX6W8C5UwPCc6foSv7B"
+        transfer.amount = 50
+        transfer.recipient = "3NtW4TTNN8Cvq9WkSHGgrRHfA314vuzrY5z"
+    
+        transfer1 = contract_transfer_out_pb2.ContractTransferOut()
+        transfer1.asset_id.value = "CkUnhCezFthA4kkHXiewhQV4CmX6W8C5UwPCc6foSv7B"
+        transfer1.amount = 50
+        transfer1.recipient = '3NoXmP2bv4xVajPGPZdzkKXy37dyUro7g7V'
+
+        transfer2 = contract_transfer_out_pb2.ContractTransferOut()
+        transfer2.asset_id.value = "CkUnhCezFthA4kkHXiewhQV4CmX6W8C5UwPCc6foSv7B"
+        transfer2.amount = 50
+        transfer2.recipient = '3NforeFPihoReVSCc18kriTbwdUamFbifLn'
+    
+        asset = [contract_asset_operation_pb2.ContractAssetOperation(contract_transfer_out = transfer),
+                    contract_asset_operation_pb2.ContractAssetOperation(contract_transfer_out = transfer1),
+                    contract_asset_operation_pb2.ContractAssetOperation(contract_transfer_out = transfer2)]
 
         data = [
             data_entry_pb2.DataEntry(key="users", string_value=json.dumps(self.users)),
@@ -118,7 +133,7 @@ class ContractHandler:
             data_entry_pb2.DataEntry(key="owner", string_value=create_transaction.sender)
         ]
         request = contract_contract_service_pb2.ExecutionSuccessRequest(
-            tx_id=create_transaction.id, results=data)
+            tx_id=create_transaction.id, results=data, asset_operations=asset)
         response = self.client.CommitExecutionSuccess(request=request, metadata=metadata)
         print("in create tx response '{}'".format(response))
 
@@ -457,12 +472,12 @@ class ContractHandler:
 
             amount = money_info["amount"]
 
-            transfer = contract_transfer_out_pb2.ContractTransferOut()
             
+            self.money_mails.pop(id)
+            transfer = contract_transfer_out_pb2.ContractTransferOut()
             transfer.recipient = sender
             transfer.asset_id.value = assetID
 
-            self.money_mails.pop(id)
 
             transfer.amount = amount
             request = contract_contract_service_pb2.ExecutionSuccessRequest(tx_id = self.__call_transaction.id, 

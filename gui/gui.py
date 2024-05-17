@@ -281,7 +281,6 @@ def confirmProduct(adr, password, prod_id, min, max, sellers):
 def registerUser(type, adr, password, name, description, region, phone, fio):
     tx = register_user_tx(adr, password, type, name, description, region, phone, fio)
     response = requests.post(BASE_URL+ports[adr]+SandB, json=tx)
-    # print(response)
     return checkStatus(response.json()['id'])
 
 def getProductPrice(prod_id):

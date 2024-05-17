@@ -1,10 +1,10 @@
-hash: 06a55c21ed460a73c1282978d0f9af80e4bc8b478d94e93cd016b0f0c50e73ca
+hash: 011627c8b688d2363787bd0073405e456da864b411f446e1edb755c941427a2f
 
-version: - 5
+version: - 1
 
-id: MYKqUMjzqGiwQXuGTfrN8QhuodTezQSDrsNrUVwn4Mq
+id: 45YSVkQKR9FKHTRg6ij7NANA9TZe6sP4kyRutx2vA1T8
 
-tokenID: C6FrUQWhBWiBHTvwytSDQjUoMZtm22pTWZjarfzChkyi
+tokenID: CkUnhCezFthA4kkHXiewhQV4CmX6W8C5UwPCc6foSv7B
 
 {
   "type": 103,
@@ -12,8 +12,8 @@ tokenID: C6FrUQWhBWiBHTvwytSDQjUoMZtm22pTWZjarfzChkyi
   "sender": "3NvCmTJEsJqZy8rseRJXJFaLdqX5XeiEsqp",
   "password": "DC3_0U7cCGhGQstieg8kHg",
   "image": "localhost:5000/mail",
-  "contractName": "mail update",
-  "imageHash": "a5b5a1b4b2c8dbc5a885e2cb8823bbb51d61cac1bd0856a63a0a79851721525a",
+  "contractName": "mail block",
+  "imageHash": "011627c8b688d2363787bd0073405e456da864b411f446e1edb755c941427a2f",
   "params": [],
   "fee": 0,
   "feeAssetId": null

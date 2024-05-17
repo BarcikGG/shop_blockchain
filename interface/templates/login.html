@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}login{% endblock %}
+
+{% block main %}
+    <div style="margin-top: 2vh;">
+        <form style="display: flex; flex-direction: column; gap: 15px; width: 50%; margin: 0 auto;">
+            <h1 style="text-align: center;">Login page</h1>
+
+            <div class="form-floating">
+                <input type="address" class="form-control" id="adr" placeholder="3NoXmP2bv4xVajPGPZdzkKXy37dyUro7g7V">
+                <label for="adr">Address</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control" id="password" placeholder="123456">
+                <label for="password">Password</label>
+            </div>
+
+            <button class="btn btn-primary w-100 py-2" onclick="login_user()" type="button">sign in</button>
+            <div id="response" class="response" style="margin: 0 auto;"></div>
+        </form>
+    </div>
+
+<script>
+    async function login_user() {
+        try {
+            const adr = document.getElementById("adr").value;
+            const password = document.getElementById("password").value;
+            document.getElementById("response").innerHTML = 'sending...';
+            
+            const response = await fetch('/user_login', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({'adr': adr, 'password': password})
+            })
+
+            if(!response.ok) {
+                document.getElementById("response").innerHTML = response.status;
+            }
+
+            const data = await response.text()
+
+            document.getElementById("response").innerHTML = data;
+        } catch (error) {
+            document.getElementById("response").innerHTML = error.message;
+            console.log(error.message);
+        }
+    }
+</script>
+{% endblock %}
