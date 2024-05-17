@@ -52,7 +52,10 @@ class ContractHandler:
         
 
         self.users = {}
+        self.workers = {}
         self.mails = {}
+        self.money_mails = {}
+        self.history = {}
         self.days = 0
         self.last_sent = 1
         return
@@ -81,9 +84,29 @@ class ContractHandler:
     def __handle_create_transaction(self, contract_transaction_response):
         create_transaction = contract_transaction_response.transaction
         metadata = [(AUTH_METADATA_KEY, contract_transaction_response.auth_token)]
+
+        new_admin = User({"name": 'Семенов Семен Семенович', 'balance': 50,
+                          "home_address": 'Pushkina 8 kv 15', "role": 'admin'})
+        self.users[create_transaction.sender] = new_admin.objToStr()
+
+        new_client = User({"name": 'Юрьев Юрий Юрьевич', 'balance': 50,
+                           "home_address": 'Doroznya 10 kv 16', "role": 'client'})
+        self.users['3NforeFPihoReVSCc18kriTbwdUamFbifLn'] = new_client.objToStr()
+
+        new_worker = Worker({"name": 'Петров Петр Петрович', "home_address": 'Doroznya 20 kv 14', 
+                             "role": 'worker', 'ident': 'RR344000', 'balance': 50})
+        self.workers[create_transaction.sender] = new_worker.objToStr()
+
+        new_worker2 = Worker({"name": 'Антонов Антон Антонович', "home_address": 'Doroznya 11 kv 17', 
+                              "role": 'worker', 'ident': 'RR347900', 'balance': 50})
+        self.workers[create_transaction.sender] = new_worker2.objToStr()
+
         data = [
             data_entry_pb2.DataEntry(key="users", string_value=json.dumps(self.users)),
             data_entry_pb2.DataEntry(key="mails", string_value=json.dumps(self.mails)),
+            data_entry_pb2.DataEntry(key="history", string_value=json.dumps(self.history)),
+            data_entry_pb2.DataEntry(key="money_mails", string_value=json.dumps(self.money_mails)),
+            data_entry_pb2.DataEntry(key="workers", string_value=json.dumps(self.workers)),
             data_entry_pb2.DataEntry(key="days", int_value=create_transaction.timestamp),
             data_entry_pb2.DataEntry(key="last_sent", int_value=1),
             data_entry_pb2.DataEntry(key="owner", string_value=create_transaction.sender)
@@ -100,7 +123,15 @@ class ContractHandler:
             action = find_string(self.__call_transaction.params, "action")
             if action == "register": self.__register()
             elif action == "send mail": self.__send_mail()
-            else: self.__set_error("Can't find action. Available: register, send mail")
+            elif action == "send money": self.__send_money()
+            elif action == "approve mail": self.__approve_mail()
+            elif action == "edit profile": self.__edit_profile()
+            elif action == "revoke": self.__revoke()
+            elif action == "reject money": self.__reject_money()
+            elif action == "receive": self.__receive_money()
+            elif action == "reject mail": self.__reject_mail()
+            elif action == "edit workers": self.__edit_workers()
+            else: self.__set_error("Can't find action. Available: register, send mail, send money ...")
         except BaseException as error:
             self.__set_error(error)
     
@@ -114,10 +145,70 @@ class ContractHandler:
                 self.__set_error("User is already registered")
             if name is None: self.__set_error("Name is required")
             if home_adr is None: self.__set_error("Home address is required")
-            
 
-            new_user = User({"name": name, "home_address": home_adr, "role": 'client'})
+            new_user = User({"name": name, "home_address": home_adr, 'balance': 50, "role": 'client'})
             self.users[self.__call_transaction.sender] = new_user.objToStr()
+
+            self.__write_data([
+                data_entry_pb2.DataEntry(key="users",string_value=json.dumps(self.users))
+            ])
+        except BaseException as error:
+            self.__set_error(str(error))
+
+    def __edit_workers(self):
+        try:
+            self.workers = self.__read_key("workers")
+            self.users = self.__read_key("users")
+            type = find_string(self.__call_transaction.params, "type")
+            index = find_int(self.__call_transaction.params, "index")
+            adr = find_string(self.__call_transaction.params, "adr")
+
+            sender = json.loads(self.users[self.__call_transaction.sender])
+            if type not in ['add', 'delete']: self.__set_error('Wrong type: choose: add, delete, edit')
+            if sender['role'] != 'admin': self.__set_error('You are not admin')
+
+            if type == 'add':
+                if adr not in self.users: self.__set_error('Cant find this user')
+                if adr in self.workers: self.__set_error('Worker is registered')
+                user_info = json.loads(self.users[adr])
+
+                new_worker = Worker({"name": user_info['name'], "home_address": user_info['home_address'], 
+                             "role": 'worker', 'ident': f'RR{index}', 'balance': user_info['balance']})
+                self.workers[adr] = new_worker.objToStr()
+            if type == 'edit':
+                if adr not in self.workers: self.__set_error('Worker is not registered')
+                worker_info = json.loads(self.workers[adr])
+                worker_info['ident'] = f'RR{index}'
+                self.workers[adr] = json.dumps(worker_info)
+            if type == 'delete':
+                self.workers.pop(adr)
+
+            self.__write_data([
+                data_entry_pb2.DataEntry(key="users", string_value=json.dumps(self.users)),
+                data_entry_pb2.DataEntry(key="workers", string_value=json.dumps(self.workers))
+            ])
+        except BaseException as error:
+            self.__set_error(str(error))
+
+    def __edit_profile(self):
+        try:
+            self.users = self.__read_key("users")
+            name = find_string(self.__call_transaction.params, "name")
+            home_adr = find_string(self.__call_transaction.params, "home_address")
+            sender = self.__call_transaction.sender
+            
+            if sender not in self.users:
+                self.__set_error("Cant find user")
+
+            user = json.loads(self.users[sender])
+
+            if name is None: name = user['name']
+            if home_adr is None: home_adr = user['home_address']
+
+            user['name'] = name
+            user['home_address'] = home_adr
+
+            self.users[sender] = json.dumps(user)
 
             self.__write_data([
                 data_entry_pb2.DataEntry(key="users",string_value=json.dumps(self.users))
@@ -144,14 +235,15 @@ class ContractHandler:
             recipient = find_string(self.__call_transaction.params, "recipient")
             cost = find_int(self.__call_transaction.params, "cost")
 
-            if recipient is None or recipient not in self.users: self.__set_error('Cant find recipient!')
+            if recipient not in self.users: self.__set_error('Cant find recipient!')
+            if sender not in self.users: self.__set_error('You must be registered!')
             
             address_to = json.loads(self.users[recipient])['home_address']
             if type is None: self.__set_error('Type is required!')
             if address_from is None or address_to is None: self.__set_error('Addresses is reqired!')
             if type not in ['mail', 'banderol', 'package']: self.__set_error('Wrong type! Choose: mail, banderol, package')
             if mail_class is None: self.__set_error('Mail class is required!')
-            if index_from is None or index_to is None: self.__set_error('Indexes class is required!')
+            if index_from is None or index_to is None: self.__set_error('Indexes is required!')
             if float(weight) > 10 or weight is None: self.__set_error('Wrong weight, max 10kg')
 
             need_days = mail_classes[mail_class]['days']
@@ -160,52 +252,238 @@ class ContractHandler:
             if cost is None: cost = 0
             total_price = delivery_price + (cost * 0.1)
 
+            current_user = json.loads(self.users[sender])
+
+            if float(current_user['balance']) < total_price: self.__set_error('Not enough money')
+
+            payments = self.__call_transaction.payments
+            if len(payments) != 1: self.__set_error('Wrong payments')
+            if float(payments[0].amount) < total_price: self.__set_error('Not enough money in payments')
 
             track_num = generate_number(start_time, end_time, old_last_sent, index_from, index_to)
 
-            mail = Mail({"track_number": track_num, "sender": sender, "recipient": recipient, "type": type, 
+            mail = Mail({"track_number": track_num, "sender": sender, "recipient": recipient, "type": type, "time": end_time//1000,
                          "weight": weight, "class": mail_class, "date_to": need_days, "delivery_price": delivery_price, 
                          "price_of": cost, "total_cost": total_price, 
                          "address_to": {"index": index_to, "address": address_to}, 
                          "address_from": {"index": index_from, "address": address_from}})
-            
+
+            current_user['balance'] = float(current_user['balance']) - total_price
+
             self.mails[track_num] = mail.objToStr()
+            self.users[sender] = json.dumps(current_user)
             self.__write_data([
                 data_entry_pb2.DataEntry(key="mails",string_value=json.dumps(self.mails)),
+                data_entry_pb2.DataEntry(key="users",string_value=json.dumps(self.users)),
                 data_entry_pb2.DataEntry(key="last_sent",int_value=old_last_sent + 1)
             ])
-
         except BaseException as error:
             self.__set_error(str(error))
 
-    
-    
-    def __withdraw(self):
+    def __reject_mail(self):
         try:
-            self.orders = self.__read_key("orders")
-            id = find_string(self.__call_transaction.params, "order_id")
-            assetID = find_string(self.__call_transaction.params, "asset")
+            self.workers = self.__read_key("workers")
+            self.mails = self.__read_key("mails")
+            self.history = self.__read_key("history")
+            sender = self.__call_transaction.sender
+            track = find_string(self.__call_transaction.params, "track")
+            now_time = int(self.__call_transaction.timestamp)//1000
             
-            if id not in self.orders: self.__set_error('cant find order')
+            if track not in self.mails: self.__set_error('Wrong track number')
+            if track not in self.history: self.__set_error('Mail didnt sent')
+            mail = json.loads(self.mails[track])
+            mail_history = json.loads(self.history[track])
+            if mail['recipient'] != sender: self.__set_error('Its not your mail')
+            if int(mail_history[-1]['worker'])[2:] != mail['address_to']['index'] : self.__set_error('Mail in delivery')
+            if now_time <  int(mail['time']) + (int(mail['date_to']) * 24*60*60): self.__set_error('Wait time for delivery')
 
-            order_data = json.loads(self.orders[id])
-            if self.__call_transaction.sender_public_key != order_data["seller"]:
-                self.__set_error("You are not a seller")
+            self.mails.pop(track)
+            self.__write_data([
+                data_entry_pb2.DataEntry(key="mails", string_value=json.dumps(self.mails))
+            ])
+        except BaseException as error:
+            self.__set_error(str(error))
 
-            if order_data["status"] != 'approved':
-                self.__set_error("Order wasn't approve")
+    def __approve_mail(self):
+        try:
+            self.workers = self.__read_key("workers")
+            self.mails = self.__read_key("mails")
+            self.history = self.__read_key("history")
+            track_num = find_string(self.__call_transaction.params, "track_number")
+            weight = find_string(self.__call_transaction.params, "weight")
+            worker = self.__call_transaction.sender
 
-            recipient = self.__call_transaction.sender
-            amount = order_data["total_price"]
+            if self.__call_transaction.sender not in self.workers: self.__set_error('You are not a worker!')
+            if track_num not in self.mails: self.__set_error('Cant find this mail!')
+            mail_info = json.loads(self.mails[track_num])
+            worker_info = json.loads(self.workers[worker])
+                                     # RR374701
+            worker_ident = worker_info['ident']
+                                        #374701
+
+            if track_num not in self.history:
+                if mail_info['address_from']['index'] != int(worker_ident[2:]): self.__set_error('Mail not in this place')
+                
+                new_transit = HistoryItem([{"worker": worker_ident, "track": track_num, "weight": weight}])
+                self.history[track_num] = new_transit.objToStr()
+            else:
+                items = json.loads(self.history[track_num])
+                last_index = int(items[len(items) - 1]['worker'][2:]) # получили индекс почты которая была последней
+                map = create_map(mail_info['address_from']['index'], mail_info['address_to']['index'])
+
+                # тут проверяем что прошлый пункт назначения посылки был верным 
+                # и проверяем, что ее следующая точка это наш текущий пункт
+                if int(map[len(items) - 1]) == last_index and int(map[len(items)]) == int(worker_ident[2:]):
+                    items.append({"worker": worker_ident, "track": track_num, "weight": weight})
+                    self.history[track_num] = json.dumps(items)
+                else: self.__set_error('Mail to far!')
+
+            self.__write_data([
+                data_entry_pb2.DataEntry(key="history", string_value=json.dumps(self.history))
+            ])
+        except BaseException as error:
+            self.__set_error(str(error))
+    
+    def __send_money(self):
+        try:
+            old_last_sent = self.__read_int("last_sent")
+            self.workers = self.__read_key("workers")
+            self.users = self.__read_key("users")
+            self.money_mails = self.__read_key("money_mails")
+            sender = self.__call_transaction.sender
+            send_time = int(self.__call_transaction.timestamp)
+            
+            recipient = find_string(self.__call_transaction.params, "recipient")
+            lifetime = find_int(self.__call_transaction.params, "lifetime")
+
+            current_user = json.loads(self.users[sender])
+
+            if sender not in self.users or sender not in self.workers: self.__set_error('You must be registered!')
+            if recipient not in self.users or recipient not in self.workers: self.__set_error('Wrong recipient!')
+            if lifetime is None or lifetime <= 0: self.__set_error('Lifetime must be int and > 0')
+
+            payments = self.__call_transaction.payments
+            if len(payments) != 1: self.__set_error("Wrong payments")
+            if int(current_user['balance']) < payments[0].amount: self.__set_error("Not enough money!")
+
+            current_user['balance'] = current_user['balance'] - payments[0].amount
+            self.users[sender] = json.dumps(current_user)
+
+            time = send_time//1000
+            new_moneyMail = MoneyMail({"sender": sender, "recipient": recipient, "amount": payments[0].amount, "lifetime": lifetime, "time": time})
+            
+            self.money_mails[old_last_sent] = new_moneyMail.objToStr()
+
+            self.__write_data([
+                data_entry_pb2.DataEntry(key="users", string_value=json.dumps(self.users)),
+                data_entry_pb2.DataEntry(key="money_mails", string_value=json.dumps(self.money_mails)),
+                data_entry_pb2.DataEntry(key="last_sent",int_value=old_last_sent + 1)
+            ])
+        except BaseException as error:
+            self.__set_error(str(error))
+
+    def __reject_money(self):
+        try:
+            self.workers = self.__read_key("workers")
+            self.users = self.__read_key('users')
+            self.money_mails = self.__read_key("money_mails")
+            sender = self.__call_transaction.sender
+            id = find_int(self.__call_transaction.params, "transact_number")
+            now_time = int(self.__call_transaction.timestamp)
+            
+            if sender not in self.users or sender not in self.workers: self.__set_error('You must be registered!')
+            if id not in self.money_mails: self.__set_error('Wrong money transaction id')
+            money_info = json.loads(self.money_mails[id])
+
+            if sender != money_info['recipient']: self.__set_error('Its not for you!')
+
+            self.money_mails.pop(id)
+            self.__write_data([
+                data_entry_pb2.DataEntry(key="money_mails", string_value=json.dumps(self.money_mails))
+            ])
+        except BaseException as error:
+            self.__set_error(str(error))
+
+    def __revoke(self):
+        try:
+            self.workers = self.__read_key("workers")
+            self.users = self.__read_key('users')
+            self.money_mails = self.__read_key("money_mails")
+            sender = self.__call_transaction.sender
+            assetID = find_string(self.__call_transaction.params, "asset")
+            id = find_int(self.__call_transaction.params, "transact_number")
+            
+            if sender not in self.users or sender not in self.workers: self.__set_error('You must be registered!')
+            if id not in self.money_mails: self.__set_error('Wrong money transaction id')
+            money_info = json.loads(self.money_mails[id])
+
+            if sender != money_info['sender']: self.__set_error('Its not your sent!')
+
+            amount = money_info["amount"]
+
+            current_user = json.loads(self.users[sender])
+            current_user['balance'] = current_user['balance'] + amount
+            self.users[sender] = json.dumps(current_user)
 
             transfer = contract_transfer_out_pb2.ContractTransferOut()
             
-            transfer.recipient = recipient
+            transfer.recipient = sender
             transfer.asset_id.value = assetID
+
+            self.money_mails.pop(id)
 
             transfer.amount = amount
             request = contract_contract_service_pb2.ExecutionSuccessRequest(tx_id = self.__call_transaction.id, 
-                                                                            results = [data_entry_pb2.DataEntry(key="ok", string_value="success")], 
+                                                                            results = [data_entry_pb2.DataEntry(key="ok", string_value="success"),
+                                                                                       data_entry_pb2.DataEntry(key="users", string_value=json.dumps(self.users)),
+                                                                                       data_entry_pb2.DataEntry(key="money_mails", string_value=json.dumps(self.money_mails))], 
+                                                                            asset_operations=[contract_asset_operation_pb2.ContractAssetOperation(contract_transfer_out = transfer)])
+
+            self.client.CommitExecutionSuccess(request, metadata=self.__metadata)
+        except BaseException as error:
+            self.__set_error(str(error))
+    
+    def __receive_money(self):
+        try:
+            self.workers = self.__read_key("workers")
+            self.users = self.__read_key('users')
+            self.money_mails = self.__read_key("money_mails")
+            sender = self.__call_transaction.sender
+            assetID = find_string(self.__call_transaction.params, "asset")
+            id = find_int(self.__call_transaction.params, "transact_number")
+
+            now_time = int(self.__call_transaction.timestamp)
+            
+            if sender not in self.users or sender not in self.workers: self.__set_error('You must be registered!')
+            if id not in self.money_mails: self.__set_error('Wrong money transaction id')
+            money_info = json.loads(self.money_mails[id])
+
+            if sender != money_info['recipient']: self.__set_error('Its not for you!')
+
+            days = money_info['lifetime']
+            sended_time = money_info['time']
+            life_to = sended_time + (days * 24 * 60 * 60)
+
+            if life_to < now_time : self.__set_error('Lifetime is end!')
+
+            amount = money_info["amount"]
+
+            current_user = json.loads(self.users[sender])
+            current_user['balance'] = current_user['balance'] + amount
+            self.users[sender] = json.dumps(current_user)
+
+            transfer = contract_transfer_out_pb2.ContractTransferOut()
+            
+            transfer.recipient = sender
+            transfer.asset_id.value = assetID
+
+            self.money_mails.pop(id)
+
+            transfer.amount = amount
+            request = contract_contract_service_pb2.ExecutionSuccessRequest(tx_id = self.__call_transaction.id, 
+                                                                            results = [data_entry_pb2.DataEntry(key="ok", string_value="success"),
+                                                                                       data_entry_pb2.DataEntry(key="users", string_value=json.dumps(self.users)),
+                                                                                       data_entry_pb2.DataEntry(key="money_mails", string_value=json.dumps(self.money_mails))], 
                                                                             asset_operations=[contract_asset_operation_pb2.ContractAssetOperation(contract_transfer_out = transfer)])
 
             self.client.CommitExecutionSuccess(request, metadata=self.__metadata)
@@ -251,9 +529,18 @@ class ContractHandler:
 class User:
     def __init__(self, dictionary) -> None:
         self.name = dictionary["name"]
+        self.balance = dictionary["balance"]
         self.home_address = dictionary["home_address"]
         self.role = dictionary["role"]
     def objToStr(self): return json.dumps(self.__dict__)
+
+class Worker:
+    def __init__(self, dictionary) -> None:
+        self.name = dictionary["name"]
+        self.balance = dictionary["balance"]
+        self.home_address = dictionary["home_address"]
+        self.role = dictionary["role"]
+        self.ident = dictionary["ident"]
 
 class Mail:
     def __init__(self, dictionary) -> None:
@@ -269,6 +556,7 @@ class Mail:
         self.total_cost = dictionary["total_cost"]
         self.address_to = dictionary["address_to"]
         self.address_from = dictionary["address_from"]
+        self.time = dictionary["time"]
     def objToStr(self): return json.dumps(self.__dict__)
 
 class MoneyMail:
@@ -277,10 +565,23 @@ class MoneyMail:
         self.recipient = dictionary["recipient"]
         self.amount = dictionary["amount"]
         self.lifetime = dictionary["lifetime"]
+        self.time = dictionary["time"]
+    def objToStr(self): return json.dumps(self.__dict__)
+
+class HistoryItem:
+    def __init__(self, dictionary) -> None:
+        self.info = dictionary["info"]
+    def objToStr(self): return json.dumps(self.__dict__)
+
+class Transit:
+    def __init__(self, dictionary) -> None:
+        self.worker = dictionary["worker"]
+        self.track = dictionary["track"]
+        self.weight = dictionary["weight"]
     def objToStr(self): return json.dumps(self.__dict__)
 
 def getDate(start_time, end_time):
-    dt = datetime.datetime(2024, 5, 16)
+    dt = datetime.datetime(2024, 5, 17)
     days = (end_time//1000 - start_time//1000) // 5
     dt += datetime.timedelta(days=days)
     return dt.strftime("%d%m%Y")
@@ -295,24 +596,24 @@ def create_map(index_from, index_to):
     to_num = str(index_to)[2]
     to_num_last = str(index_to)[5]
 
-    map = [index_from]
+    map = [str(index_from)]
 
     if(from_num == '4'):
         if(to_num == '4'):
-            map.append(index_to)
+            map.append(str(index_to))
         elif(to_num_last == '0'):
-            map.append(index_to)
+            map.append(str(index_to))
         else:
-            map.append(index_to.slice(0, 5)+ '0')
-            map.append(index_to)
+            map.append(str(index_to)[:-1]+ '0')
+            map.append(str(index_to))
     else:
         if(from_num_last != '0'):
-            map.append(index_from.slice(0, 5)+ '0')
+            map.append(str(index_from)[:-1]+ '0')
         map.append('344000')
-        if(to_num != 4):
-            if(to_num_last != 0):
-                map.append(index_to.slice(0, 5)+ '0')
-            map.append(index_to)
+        if(to_num != '4'):
+            if(to_num_last != '0'):
+                map.append(str(index_to)[:-1]+ '0')
+            map.append(str(index_to))
 
     return map
 

@@ -1,4 +1,5 @@
 import datetime
+import json
 
 
 indexes = {
@@ -14,29 +15,29 @@ indexes = {
 }
 
 def create_map(index_from, index_to):
-    last_from_num = str(index_from)[5]
+    from_num_last = str(index_from)[5]
     from_num = str(index_from)[2]
-    main_city_num = str(index_to)[2]
-    last_to_num = str(index_to)[5]
+    to_num = str(index_to)[2]
+    to_num_last = str(index_to)[5]
 
     map = [str(index_from)]
 
     if(from_num == '4'):
-        if(main_city_num == '4'):
-            map.append(index_to)
-        elif(last_to_num == '0'):
-            map.append(index_to)
+        if(to_num == '4'):
+            map.append(str(index_to))
+        elif(to_num_last == '0'):
+            map.append(str(index_to))
         else:
-            map.append(str(index_to)[0:5]+ '0')
-            map.append(index_to)
+            map.append(str(index_to)[:-1]+ '0')
+            map.append(str(index_to))
     else:
-        if(last_from_num != '0'):
-            map.append(str(index_from)[0:5]+ '0')
+        if(from_num_last != '0'):
+            map.append(str(index_from)[:-1]+ '0')
         map.append('344000')
-        if(main_city_num != '4'):
-            if(last_to_num != '0'):
-                map.append(str(index_to)[0:5]+ '0')
-            map.append(index_to)
+        if(to_num != '4'):
+            if(to_num_last != '0'):
+                map.append(str(index_to)[:-1]+ '0')
+            map.append(str(index_to))
 
     return map
 
@@ -63,7 +64,23 @@ def getDate(start_time, end_time):
     dt += datetime.timedelta(days=days)
     return dt.strftime("%d%m%Y")
             # 1715839200  1715887800
-print(getDate(1715839200800, 1715887800926))
+# print(getDate(1715839200800, 1715887800926))
 
 # price(1, "10", 100)
-# print(create_map(346781, 346781))
+map = create_map(346781, 346780)
+# print(map)
+# print(map[len(map) -1])
+history = {}
+
+new_transit = [{"worker": '123', "track": 'rr123NUM', "weight": '5'}]
+history['rr123NUM'] = json.dumps(new_transit)
+
+items = json.loads(history['rr123NUM'])
+items.append({"worker": '456', "track": 'rr123NUM', "weight": '5.2'})
+history['rr123NUM'] = json.dumps(items)
+
+items = json.loads(history['rr123NUM'])
+print(int(items[len(items) - 1]['worker'][2:]))
+
+print(history)
+# print(map.index('346780'))
