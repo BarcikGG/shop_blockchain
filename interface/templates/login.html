@@ -42,7 +42,11 @@
 
             const data = await response.text()
 
-            document.getElementById("response").innerHTML = data;
+            if (data === "Success") {
+                window.location.href = "/";
+            } else {
+                document.getElementById("response").innerHTML = data;
+            }
         } catch (error) {
             document.getElementById("response").innerHTML = error.message;
             console.log(error.message);

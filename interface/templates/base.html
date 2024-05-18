@@ -12,8 +12,13 @@
         <div class="d-flex justify-content-center py-3">
             <ul class="nav nav-pills">
                 <li class="nav-item"><a href="/" class="nav-link active">bmail</a></li>
-                <li class="nav-item"><a href="/login" class="nav-link">login</a></li>
-                <li class="nav-item"><a href="/register" class="nav-link">register</a></li>
+
+                {% if session['adr'] %}
+                    <li class="nav-item"><button onclick="logout()" class="nav-link">logout</button></li>
+                {% else %}
+                    <li class="nav-item"><a href="/login" class="nav-link">login</a></li>
+                    <li class="nav-item"><a href="/register" class="nav-link">register</a></li>
+                {% endif %}
             </ul>
         </div>
     {% endblock %}
@@ -21,5 +26,22 @@
     <div class="container">
         {% block main %}{% endblock %}
     </div>
+
+    <script>
+        async function logout() {
+            try {
+                const response = await fetch('/logout', {
+                    method: 'POST',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({})
+                })
+                window.location.href = "/";
+            } catch {
+                
+            }
+        }
+    </script>
 </body>
 </html>

@@ -1,10 +1,12 @@
-from flask import Flask, jsonify, render_template, json, request
+from flask import Flask, jsonify, redirect, render_template, json, request, session
 import time
 import requests
 
 from transactions_tx.tx import *
 
+
 app = Flask(__name__)
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 BASE_URL = 'http://localhost:'
 
@@ -27,6 +29,11 @@ def index():
 def login_page():
     return render_template('login.html')
 
+@app.route("/logout", methods=['POST'])
+def logout():
+    session.clear()
+    return redirect('/')
+
 @app.route("/register")
 def register_user():
     return render_template('register.html')
@@ -39,6 +46,8 @@ def login_user():
     result = login(adr, password)
     print(result)
     if result == 'Error: Can\'t find action. Available: register, send mail, send money ...':
+        session['adr'] = adr
+        session['password'] = password
         return "Success"
     return jsonify(result)
 
