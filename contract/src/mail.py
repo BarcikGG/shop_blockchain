@@ -104,18 +104,18 @@ class ContractHandler:
         self.workers["3NtW4TTNN8Cvq9WkSHGgrRHfA314vuzrY5z"] = new_worker.objToStr()
 
         transfer = contract_transfer_out_pb2.ContractTransferOut()
-        transfer.asset_id.value = "CkUnhCezFthA4kkHXiewhQV4CmX6W8C5UwPCc6foSv7B"
-        transfer.amount = 50
+        # transfer.asset_id.value = "CkUnhCezFthA4kkHXiewhQV4CmX6W8C5UwPCc6foSv7B"
+        transfer.amount = "50"
         transfer.recipient = "3NtW4TTNN8Cvq9WkSHGgrRHfA314vuzrY5z"
     
         transfer1 = contract_transfer_out_pb2.ContractTransferOut()
-        transfer1.asset_id.value = "CkUnhCezFthA4kkHXiewhQV4CmX6W8C5UwPCc6foSv7B"
-        transfer1.amount = 50
+        # transfer1.asset_id.value = "CkUnhCezFthA4kkHXiewhQV4CmX6W8C5UwPCc6foSv7B"
+        transfer1.amount = "50"
         transfer1.recipient = '3NoXmP2bv4xVajPGPZdzkKXy37dyUro7g7V'
 
         transfer2 = contract_transfer_out_pb2.ContractTransferOut()
-        transfer2.asset_id.value = "CkUnhCezFthA4kkHXiewhQV4CmX6W8C5UwPCc6foSv7B"
-        transfer2.amount = 50
+        # transfer2.asset_id.value = "CkUnhCezFthA4kkHXiewhQV4CmX6W8C5UwPCc6foSv7B"
+        transfer2.amount = "50"
         transfer2.recipient = '3NforeFPihoReVSCc18kriTbwdUamFbifLn'
     
         asset = [contract_asset_operation_pb2.ContractAssetOperation(contract_transfer_out = transfer),

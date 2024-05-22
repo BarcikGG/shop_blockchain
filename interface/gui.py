@@ -62,6 +62,20 @@ def user_reg():
     # print(result)
     return jsonify(result)
 
+@app.route("/send_mail", methods=['POST'])
+def send_mail():
+    data = request.json
+    type = data['type']
+    mail_class = data['mail_class']
+    weight = data["weight"]
+    recipient = data['recipient']
+    cost = data['cost']
+    index_from = data['index_from']
+    index_to = data['index_to']
+    result = sendMail(type, mail_class, weight, recipient, cost, index_from, index_to)
+    print("result: "+result)
+    return jsonify(result)
+
 def login(adr, password):
     tx = login_tx(adr, password)
     response = requests.post(f'{BASE_URL}{ports[adr]}{SandB}', json=tx)
@@ -77,12 +91,34 @@ def registration(adr, password, fio, home):
         return response.json()['message']
     return check_status(response.json()['id'])
 
+def sendMail(type, mail_class, weight, recipient, cost, index_from, index_to):
+    adr = session.get('adr')
+    password = session.get('password')
+    amount = calculate_price(int(mail_class), weight) + (int(cost) * 0.1)
+    print(int(amount).__round__(2))
+    tx = send_mail_tx(adr, password, type, mail_class, weight, recipient, cost, index_to, index_from, amount.__round__(2))
+    response = requests.post(f'{BASE_URL}{ports[adr]}{SandB}', json=tx)
+    print(response.json())
+    if 'error' in response.json():
+        return response.json()['message']
+    return check_status(response.json()['id'])
+
+def calculate_price(mail_class, weight):
+    mail_classes = {
+        1: {'days': 5, 'price': 0.5},
+        2: {'days': 10, 'price': 0.3},
+        3: {'days': 15, 'price': 0.1}
+    }
+    delivery_price = mail_classes[mail_class]['price'] * float(weight)
+    return delivery_price
+
 def check_status(id):
     time.sleep(5)
     iterations = 0
     while True:
         response = requests.get(Status+id)
         if isinstance(response.json(), list) and 'status' in response.json()[-1]:
+            # print(response.json()[-1])
             if response.json()[-1]['status'] == 'Error': return response.json()[-1]['message']
             return response.json()[-1]['status']
         iterations += 1

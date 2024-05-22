@@ -3,7 +3,75 @@
 {% block title %}index{% endblock %}
 
 {% block main %}
-    <div>
-        <h1>Index page</h1>
+    <div style="display: flex; flex-direction: column; gap: 15px; width: 50%; margin: 0 auto;">
+        <form style="display: flex; flex-direction: column; gap: 15px; width: 50%; margin: 0 auto;">
+            <h1 style="text-align: center;">Send mail</h1>
+
+            <div class="form-floating">
+                <input type="address" class="form-control" id="adr" placeholder="3NoXmP2bv4xVajPGPZdzkKXy37dyUro7g7V">
+                <label for="adr">Index from</label>
+            </div>
+            <div class="form-floating">
+                <input type="address" class="form-control" id="adr_to" placeholder="3NoXmP2bv4xVajPGPZdzkKXy37dyUro7g7V">
+                <label for="adr">Index to</label>
+            </div>
+            <div class="form-floating">
+                <input type="text" class="form-control" id="type" placeholder="Bobrov Petr Sergee">
+                <label for="type">Type of message (mail, banderol, package)</label>
+            </div>
+            <div class="form-floating">
+                <input type="number" class="form-control" id="mail_class" placeholder="Moskva Dorozhnaya 14 kv 23">
+                <label for="mail_class">Class (1,2,3)</label>
+            </div>
+
+            <div class="form-floating">
+                <input type="number" class="form-control" id="weight" placeholder="123456">
+                <label for="password">Weight</label>
+            </div>
+            <div class="form-floating">
+                <input type="text" class="form-control" id="recipient" placeholder="Bobrov Petr Sergee">
+                <label for="recipient">Recipient address (blockchain)</label>
+            </div>
+            <div class="form-floating">
+                <input type="number" class="form-control" id="cost" placeholder="Moskva Dorozhnaya 14 kv 23">
+                <label for="cost">Cost of your item</label>
+            </div>
+
+            <button class="btn btn-primary w-100 py-2" onclick="send_mail()" type="button">send</button>
+            <div id="response" class="response" style="margin: 0 auto;"></div>
+
+            <div class="response"></div>
+        </form>
     </div>
+
+    <script>
+        async function send_mail() {
+            try {
+                let address_from = document.getElementById("adr").value;
+                let address_to = document.getElementById("adr_to").value;
+                let type = document.getElementById("type").value;
+                let mail_class = document.getElementById("mail_class").value;
+                let weight = document.getElementById("weight").value;
+                let recipient = document.getElementById("recipient").value;
+                let cost = document.getElementById("cost").value;
+                document.getElementById("response").innerHTML = "sending...";
+
+                const response = await fetch("/send_mail", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({"index_from": address_from, "index_to": address_to, "weight": weight, "type": type,
+                        "mail_class": mail_class, "recipient": recipient, "cost": cost
+                    })
+                })
+
+                const data = await response.text()
+
+                document.getElementById("response").innerHTML = data;
+            } catch (e) {
+                document.getElementById("response").innerHTML = e
+            }
+        }
+    </script>
 {% endblock %}

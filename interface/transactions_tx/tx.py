@@ -49,3 +49,64 @@ def login_tx(adr, password):
     }
 
     return tx
+
+def send_mail_tx(adr, password, type, mail_class, weight, recipient, cost, index_to, index_from, amount):
+    tx = {
+        "contractId": CONTRACT_ID,
+        "fee": 0,
+        "sender": adr,
+        "password": password,
+        "type": 104,
+        "params":
+        [
+            {
+            "type": "string",
+            "key": "action",
+            "value": "send mail"
+            },
+            {
+            "type": "string",
+            "key": "type",
+            "value": type
+            },
+            {
+            "type": "integer",
+            "key": "class",
+            "value": int(mail_class)
+            },
+            {
+            "type": "string",
+            "key": "weight",
+            "value": weight
+            },
+            {
+            "type": "integer",
+            "key": "from",
+            "value": int(index_from)
+            },
+            {
+            "type": "integer",
+            "key": "to",
+            "value": int(index_to)
+            },
+            {
+            "type": "integer",
+            "key": "cost",
+            "value": int(cost)
+            },
+            {
+            "type": "string",
+            "key": "recipient",
+            "value": recipient
+            }
+        ],
+        "payments": [
+        {
+            "assetId": ASSET_ID,
+            "amount": int(amount)
+        }
+        ],
+        "version": 5,
+        "contractVersion": VERSION
+    }
+    return tx
